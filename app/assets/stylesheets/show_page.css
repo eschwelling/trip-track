@@ -1,0 +1,9 @@
+.train-line-form {
+  /* align-items: center; */
+  display: inline-block;
+}
+
+.train-line-form form {
+  margin-top: 2rem;
+  /* width: 50%; */
+}
