@@ -12,12 +12,21 @@
 </head>
 <body>
 
-  <nav class="top-bar">
-  <ul class="title-area">
-    <li class="name">
-      <h1><a href="/">TripTrack</a></h1>
-    </li>
-  </ul>
+  <%- if current_user -%>
+      <nav class="top-bar">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="/users/<%= current_user.id %>">TripTrack</a></h1>
+        </li>
+      </ul>
+    <%- else -%>
+          <nav class="top-bar">
+          <ul class="title-area">
+            <li class="name">
+              <h1><a href="/">TripTrack</a></h1>
+            </li>
+          </ul>
+    <%- end -%>
 
   <section class="top-bar-section">
     <ul class="right">

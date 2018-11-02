@@ -5,12 +5,15 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   resources :users, only: [:show]
+  resources :journeys, only: [:show]
+
 
   namespace :api do
     namespace :v1 do
       resources :lines, only: [:index]
       resources :stops, only: [:index]
-      post 'stops/search', to: 'stops#search'
+      get '/stops/search', to: 'stops#search'
+      resources :journeys, only: [:index, :create, :show, :destroy]
     end
   end
 end

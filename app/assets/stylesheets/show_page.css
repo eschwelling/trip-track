@@ -7,3 +7,39 @@
   margin-top: 2rem;
   /* width: 50%; */
 }
+
+.hidden {
+  /* visibility: hidden; */
+  /* display: none; */
+}
+
+.commute-form {
+  border: .25rem;
+  border-style: solid;
+  border-color: black;
+  margin: 2rem 10rem 0rem 10rem;
+  background-color: white;
+}
+
+body {
+  background-color: grey;
+}
+
+.journeyTile {
+  border: .1rem;
+  border-style: solid;
+  border-color: black;
+  margin: 2rem 10rem;
+}
+
+.journeyTile:hover {
+  background-color: grey;
+}
+.journeyTile h3 {
+  font-family: 'Rubik', sans-serif;
+  color: green;
+}
+.journeyTile h1 {
+  font-family: 'Rubik', sans-serif;
+  color: black;
+}

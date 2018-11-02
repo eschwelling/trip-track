@@ -16,6 +16,7 @@ base_uri = 'https://api-v3.mbta.com'
 all_lines_external = HTTParty.get("#{base_uri}/routes")
 all_stops_external = HTTParty.get("#{base_uri}/stops")
 
+
 all_lines_external["data"].each do |line|
   line_name = line["attributes"]["long_name"]
   short_name = line["attributes"]["short_name"]
@@ -30,5 +31,6 @@ all_stops_external["data"].each do |stop|
   address = stop["attributes"]["address"]
   latitude = stop["attributes"]["latitude"]
   longitude = stop["attributes"]["longitude"]
-  Stop.create!(mbta_id: mbta_id, name: stop_name, description: description, address: address, latitude: latitude, longitude: longitude)
+  platform_name = stop["attributes"]["platform_name"]
+  Stop.create!(mbta_id: mbta_id, name: stop_name, description: description, address: address, latitude: latitude, longitude: longitude, platform_name: platform_name)
 end

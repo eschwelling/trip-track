@@ -43,6 +43,7 @@ module.exports = function(config) {
             test: /\.json$/,
             include: [
               /node_modules/,
+              /\.json$/,
               path.resolve(__dirname, '..')
             ],
             loader: 'json-loader'
@@ -50,7 +51,8 @@ module.exports = function(config) {
         ]
       },
       resolve: {
-        modules: ['app/javascript', 'node_modules']
+        modules: ['app/javascript', 'node_modules'],
+        extensions: ['', '.json', '.jsx', '.js']
       }
     },
 

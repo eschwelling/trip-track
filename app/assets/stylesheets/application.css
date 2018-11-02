@@ -18,3 +18,49 @@
 
 
  */
+
+.flash-notice {
+  margin-top: 2rem;
+  display: inline-flex;
+  margin-right: 5rem;
+  padding: 1rem;
+  margin-left: 1rem;
+  background-color: black;
+  color: white;
+  font-family: monospace;
+  font-size: 2rem;
+  border: .25rem;
+  border-style: solid;
+  border-radius: .5rem;
+  -webkit-animation: fadeOut 3s linear forwards;
+  animation: fadeOut 3s linear forwards;
+  opacity: 0;
+}
+
+.welcome-user {
+  border-radius: .25rem;
+  border: .1rem;
+  border-style: solid;
+  border-color: black;
+  background-color: #0B455A;
+  padding: 1rem;
+  display: inline-block;
+  position: fixed;
+  color: white;
+  bottom: 5;
+  right: 5;
+  top: .5;
+  left: 0;
+  margin-left: 1rem;
+  -webkit-animation: fadeOut 3s linear forwards;
+  animation: fadeOut 3s linear forwards;
+  opacity: 0;
+}
+
+@-webkit-keyframes fadeOut {
+  50% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  50% { opacity: 1; }
+}
