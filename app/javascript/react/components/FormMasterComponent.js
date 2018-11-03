@@ -192,7 +192,8 @@ class FormMasterComponent extends Component{
       )
     })
     return(
-      <div>
+      <div className="row">
+      <div className="left small-4 medium columns">
         <div className="train-line-form">
           <div className="rows columns">
             <h1>Please select your commute</h1>
@@ -217,13 +218,16 @@ class FormMasterComponent extends Component{
                 stops={this.state.destinationStops}
                 value={this.state.destination}
                 />
-              <input value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
+              <input className="success button button-block commute-chooser" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
           </form>
           </div>
         </div>
-        <h3>Your Commutes:</h3>
+      </div>
+      <div className="small-4 medium columns journey-section">
+        <h1 id="your-commutes">Your Commutes:</h1>
           {journeys}
-    </div>
+      </div>
+  </div>
     )
   }
 }

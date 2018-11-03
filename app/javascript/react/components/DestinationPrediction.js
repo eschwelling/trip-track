@@ -32,7 +32,7 @@ class DestinationPrediction extends Component {
 
   render() {
     let destinationTimes = this.state.data.map(destination => {
-      if (destination.attributes.arrival_time !== null) {
+          if (destination.attributes.arrival_time !== null && destination.attributes.direction_id == this.props.direction)  {
         return(
           <DestinationArrivalTime
             id={destination.id}

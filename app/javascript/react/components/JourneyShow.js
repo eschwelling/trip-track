@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import DepartureTime from './DepartureTime'
 import OriginPrediction from './OriginPrediction'
 import DestinationPrediction from './DestinationPrediction'
-import DurationPredictionTile from './DurationPredictionTile'
+import DurationPrediction from './DurationPrediction'
 
 
 class JourneyShow extends Component {
@@ -15,7 +15,8 @@ class JourneyShow extends Component {
       direction: "",
       departureTime: "",
       originArrivalPredictions: {},
-      destinationArrivalPredictions: {}
+      destinationArrivalPredictions: {},
+      presenceOfId: false
     }
     this.getOriginArrivalTimes = this.getOriginArrivalTimes.bind(this)
     this.getDestinationArrivalTimes = this.getDestinationArrivalTimes.bind(this)
@@ -46,7 +47,11 @@ class JourneyShow extends Component {
         console.log(this.state)
       })
       .catch(error => console.error(`Error in fetch: ${error.message}`));
-  }
+
+      if (Object.keys(this.state.destination).length != 0 && Object.keys(this.state.arrival).length != 0) {
+        this.setState({ presenceOfId: !this.state.presenceOfId})
+      }
+    }
 
   render() {
     return(
@@ -67,10 +72,17 @@ class JourneyShow extends Component {
             lineId = {this.state.line.short_name}
             direction = {this.state.direction}
             />
-          <DurationPredictionTile
-            originArrivalTimes = {this.state.originArrivalPredictions}
-            destinationArrivalTimes = {this.state.destinationArrivalPredictions}
-            />
+          {
+            this.state.presenceOfId &&
+            <DurationPrediction
+              originHandlePayload = {this.getOriginArrivalTimes}
+              destinationHandlePayload = {this.getDestinationArrivalTimes}
+              arrivalMbtaId = {this.state.origin.mbta_id}
+              destinationMbtaId = {this.state.destination.mbta_id}
+              originArrivalTimes = {this.state.originArrivalPredictions}
+              destinationArrivalTimes = {this.state.destinationArrivalPredictions}
+              />
+          }
         </div>
     )
   }

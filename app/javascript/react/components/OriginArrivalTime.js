@@ -9,7 +9,7 @@ const OriginArrivalTime = (props) => {
 
   return(
     <div className="arrival-predictions">
-      <h6 key={props.id}>Next Train Arriving At Origin: {convertedDate} </h6>
+      <h6 key={props.id}>Next Arrival: {convertedDate} </h6>
     </div>
   )
 }

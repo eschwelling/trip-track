@@ -27,12 +27,13 @@ class OriginForm extends Component {
 
       return (
             <div>
-                <label>{this.props.label}</label>
+                <label className="field-name">{this.props.label}</label>
                 <input type="text" name={this.props.label} id={this.props.label} value={this.props.value} onChange={this.handleChange}/>
-
-                <select name="originStops" onChange={this.handleFormChange}>
+                <label className="select select-xl" htmlFor="select-xl">
+                <select id="select-xl" name="originStops" onChange={this.handleFormChange}>
                   {stopOptions}
                 </select>
+                </label>
             </div>
       )
   }
