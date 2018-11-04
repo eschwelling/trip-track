@@ -18,17 +18,17 @@ class JourneyShow extends Component {
       destinationArrivalPredictions: {},
       presenceOfId: false
     }
-    this.getOriginArrivalTimes = this.getOriginArrivalTimes.bind(this)
-    this.getDestinationArrivalTimes = this.getDestinationArrivalTimes.bind(this)
+    this.idPresenceSwitch = this.idPresenceSwitch.bind(this)
   }
 
-  getOriginArrivalTimes(payload){
-    this.setState({ originArrivalPredictions: payload })
+  idPresenceSwitch(){
+    if (Object.keys(this.state.destination).length == 0 && Object.keys(this.state.origin).length == 0 && Object.keys(this.state.direction).length == 0) {
+      this.setState({ presenceOfId: this.state.presenceOfId})
+    } else {
+      this.setState({ presenceOfId: !this.state.presenceOfId})
+    }
   }
 
-  getDestinationArrivalTimes(payload){
-    this.setState({ destinationArrivalPredictions: payload })
-  }
 
   componentDidMount() {
     fetch(`/api/v1/journeys/${this.props.params.id}`)
@@ -44,48 +44,35 @@ class JourneyShow extends Component {
       .then(response => response.json())
       .then(body => {
         this.setState({ origin: body.journey.origin, destination: body.journey.destination, line: body.journey.line, direction: body.journey.direction_id })
-        console.log(this.state)
+        this.idPresenceSwitch();
       })
-      .catch(error => console.error(`Error in fetch: ${error.message}`));
-
-      if (Object.keys(this.state.destination).length != 0 && Object.keys(this.state.arrival).length != 0) {
-        this.setState({ presenceOfId: !this.state.presenceOfId})
-      }
     }
 
   render() {
-    return(
-        <div className="text-center">
-          <h1>origin: {this.state.origin.name}</h1>
-          <h1>destination: {this.state.destination.name}</h1>
-          <h1>line: {this.state.line.name}</h1>
-
-          <OriginPrediction
-            handlePayload = {this.getOriginArrivalTimes}
-            arrivalMbtaId = {this.state.origin.mbta_id}
-            lineId = {this.state.line.short_name}
-            direction = {this.state.direction}
-            />
-          <DestinationPrediction
-            handlePayload = {this.getDestinationArrivalTimes}
-            destinationMbtaId = {this.state.destination.mbta_id}
-            lineId = {this.state.line.short_name}
-            direction = {this.state.direction}
-            />
-          {
-            this.state.presenceOfId &&
-            <DurationPrediction
-              originHandlePayload = {this.getOriginArrivalTimes}
-              destinationHandlePayload = {this.getDestinationArrivalTimes}
-              arrivalMbtaId = {this.state.origin.mbta_id}
-              destinationMbtaId = {this.state.destination.mbta_id}
-              originArrivalTimes = {this.state.originArrivalPredictions}
-              destinationArrivalTimes = {this.state.destinationArrivalPredictions}
-              />
-          }
+      return(
+        <div className="row">
+          <div className="small-12 medium-8 large-6 columns predictions-show">
+            <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
+            <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
+            <h1>line: <span className="prediction-text">{this.state.line.name}</span></h1>
+          </div>
+            <div className="small-12 columns predictions-show">
+            <h3>predictions:</h3>
+                {
+                  this.state.presenceOfId &&
+                  <DurationPrediction
+                    originHandlePayload = {this.getOriginArrivalTimes}
+                    destinationHandlePayload = {this.getDestinationArrivalTimes}
+                    arrivalMbtaId = {this.state.origin.mbta_id}
+                    destinationMbtaId = {this.state.destination.mbta_id}
+                    originArrivalTimes = {this.state.originArrivalPredictions}
+                    destinationArrivalTimes = {this.state.destinationArrivalPredictions}
+                    />
+                }
+          </div>
         </div>
-    )
+      )
+    }
   }
-}
 
 export default JourneyShow;

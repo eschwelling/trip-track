@@ -44,10 +44,6 @@
   /* background-color: #979797; */
 }
 
-body {
-  background-color: grey;
-}
-
 /* .journeyTile {
   border: .1rem;
   border-style: solid;
@@ -72,4 +68,22 @@ body {
   font-weight: lighter;
   font-size: 1rem;
   text-align: left;
+}
+
+.predictions {
+  margin: .25rem;
+  font-family: 'Rubik', sans-serif;
+  max-width: 800px;
+  overflow: scroll;
+}
+
+.prediction-text {
+  font-family: 'Rubik', sans-serif;
+  color: green;
+  font-size: 3rem;
+}
+
+.predictions-show {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
 }

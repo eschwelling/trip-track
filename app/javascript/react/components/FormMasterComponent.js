@@ -94,7 +94,6 @@ class FormMasterComponent extends Component{
       direction: parseInt(this.state.direction_id),
       user: parseInt(this.props.params.id)
     }
-    debugger;
     fetch('/api/v1/journeys', {
       method: 'POST',
       body: JSON.stringify(journey),
@@ -114,7 +113,6 @@ class FormMasterComponent extends Component{
     })
     .then(response => response.json())
     .then(body => {
-      debugger;
       let newJourneys = this.state.journeys.concat(body.journey)
       this.setState({ journeys: newJourneys})
       swal("Your commute has been saved!");
@@ -197,31 +195,33 @@ class FormMasterComponent extends Component{
         <div className="train-line-form">
           <div className="rows columns">
             <h1>Please select your commute</h1>
-            <form onSubmit={this.masterButton}>
-              <LineForm
-                handlePayload={this.chooseLine}
-                />
-              <DirectionSelector
-                handlePayload={this.chooseDirection}
-                />
-              <OriginForm
-                label="origin"
-                handlePayload={this.chooseOrigin}
-                handleFormChange={this.chooseFormOrigin}
-                stops={this.state.originStops}
-                value={this.state.origin}
-                />
-              <DestinationForm
-                label="destination"
-                handlePayload={this.chooseDestination}
-                handleFormChange={this.chooseFormDestination}
-                stops={this.state.destinationStops}
-                value={this.state.destination}
-                />
-              <input className="success button button-block commute-chooser" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
-          </form>
+              <form onSubmit={this.masterButton}>
+                <LineForm
+                  handlePayload={this.chooseLine}
+                  />
+                <DirectionSelector
+                  handlePayload={this.chooseDirection}
+                  />
+                <OriginForm
+                  label="origin"
+                  handlePayload={this.chooseOrigin}
+                  handleFormChange={this.chooseFormOrigin}
+                  stops={this.state.originStops}
+                  value={this.state.origin}
+                  />
+                <DestinationForm
+                  label="destination"
+                  handlePayload={this.chooseDestination}
+                  handleFormChange={this.chooseFormDestination}
+                  stops={this.state.destinationStops}
+                  value={this.state.destination}
+                  />
+                <input className="success button button-block commute-chooser" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
+            </form>
           </div>
         </div>
+      </div>
+      <div className="small-4 medium columns">
       </div>
       <div className="small-4 medium columns journey-section">
         <h1 id="your-commutes">Your Commutes:</h1>
