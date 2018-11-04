@@ -13,8 +13,6 @@ class User < ApplicationRecord
 
   mount_uploader :profile_photo, ProfilePhotoUploader
 
-  def admin?
-    role == "true"
-  end
+  has_many :journeys
 
 end

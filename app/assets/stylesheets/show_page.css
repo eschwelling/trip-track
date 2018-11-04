@@ -3,7 +3,87 @@
   display: inline-block;
 }
 
+.commute-chooser {
+  margin-top: 1rem;
+}
+
+.train-line-form h1 {
+  font-family: 'Rubik', sans-serif;
+  text-align: left;
+}
+
 .train-line-form form {
   margin-top: 2rem;
   /* width: 50%; */
+}
+
+.left{
+  text-align: left;
+}
+
+#your-commutes{
+  font-family: 'Rubik', sans-serif;
+  display: inline-block;
+}
+
+.hidden {
+  /* visibility: hidden; */
+  /* display: none; */
+}
+
+.commute-form {
+  /* border: .25rem;
+  border-style: solid;
+  border-color: black; */
+  margin: 2rem 10rem 0rem 10rem;
+  background-color: white;
+}
+
+.journey-section{
+  display: inline-block;
+  /* background-color: #979797; */
+}
+
+/* .journeyTile {
+  border: .1rem;
+  border-style: solid;
+  border-color: black;
+  margin: 2rem 10rem;
+} */
+
+/* .journeyTile:hover {
+  background-color: grey;
+} */
+.journeyTile h3 {
+  font-family: 'Rubik', sans-serif;
+  color: green;
+}
+.journeyTile h1 {
+  font-family: 'Rubik', sans-serif;
+  color: black;
+}
+
+.field-name {
+  font-family: 'Rubik', sans-serif;
+  font-weight: lighter;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.predictions {
+  margin: .25rem;
+  font-family: 'Rubik', sans-serif;
+  max-width: 800px;
+  overflow: scroll;
+}
+
+.prediction-text {
+  font-family: 'Rubik', sans-serif;
+  color: green;
+  font-size: 3rem;
+}
+
+.predictions-show {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
 }

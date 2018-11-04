@@ -7,6 +7,10 @@ class CreateStops < ActiveRecord::Migration[5.2]
       t.string :address
       t.string :latitude
       t.string :longitude
+      t.string :platform_name
+
+      t.timestamps null: false
     end
+    add_index :stops, :name
   end
 end
