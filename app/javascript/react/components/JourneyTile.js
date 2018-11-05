@@ -12,12 +12,12 @@ class JourneyTile extends Component {
     return(
         <div key={this.props.id} className="journeyTile">
           <Link to= {`/journeys/${this.props.id}`}>
-            <h1>{this.props.line.name}</h1>
+            <h1>{this.props.line.name} - {this.props.line.short_name}</h1>
             <h3>From: {this.props.origin.name}</h3>
             <h3>To: {this.props.destination.name}</h3>
           </Link>
-          <button className="delete-button" onClick={this.props.handleDelete} type="delete" value="x">
-            <span className="delete-x">x</span>
+          <button className="button alert button-s" onClick={this.props.handleDelete} type="delete" value="x">
+            <span className="delete">x</span>
           </button>
         </div>
     )

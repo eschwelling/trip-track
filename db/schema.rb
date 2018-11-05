@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_01_223313) do
+ActiveRecord::Schema.define(version: 2018_11_05_170524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,17 @@ ActiveRecord::Schema.define(version: 2018_11_01_223313) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "notes", force: :cascade do |t|
+    t.bigint "journey_id", null: false
+    t.bigint "user_id", null: false
+    t.string "body", null: false
+    t.string "photo_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["journey_id"], name: "index_notes_on_journey_id"
+    t.index ["user_id"], name: "index_notes_on_user_id"
+  end
+
   create_table "pg_search_documents", force: :cascade do |t|
     t.text "content"
     t.string "searchable_type"
@@ -58,6 +69,15 @@ ActiveRecord::Schema.define(version: 2018_11_01_223313) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_stops_on_name"
+  end
+
+  create_table "trips", force: :cascade do |t|
+    t.bigint "journey_id", null: false
+    t.string "arrival", null: false
+    t.string "departure", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["journey_id"], name: "index_trips_on_journey_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -10,66 +10,8 @@ class DurationPrediction extends Component {
       matchedPredictions: []
     }
     this.fetchArrivalsAndDestinations = this.fetchArrivalsAndDestinations.bind(this)
-  // this.mappedMatchedPredictions = []
-  // this.fetchArrivals = this.fetchArrivals.bind(this)
-  // this.fetchDestinations = this.fetchDestinations.bind(this)
 }
 
-  // fetchArrivals(){
-  //   fetch(`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.arrivalMbtaId}`)
-  //   .then(response => {
-  //     if (response.ok) {
-  //       return response;
-  //     } else {
-  //       let errorMessage = `${response.status} (${response.statusText})`,
-  //       error = new Error(errorMessage);
-  //       throw(error);
-  //     }
-  //   })
-  //   .then(response => response.json())
-  //   .then(body => {
-  //     this.setState({ arrivals: body.data })
-  //   })
-  //   .catch(error => console.error(`Error in fetch: ${error.message}`));
-  // }
-
-  // fetchDestinations(){
-  //   fetch(`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.destinationMbtaId}`)
-  //   .then(response => {
-  //     if (response.ok) {
-  //       return response;
-  //     } else {
-  //       let errorMessage = `${response.status} (${response.statusText})`,
-  //       error = new Error(errorMessage);
-  //       throw(error);
-  //     }
-  //   })
-  //   .then(response => response.json())
-  //   .then(newBody => {
-  //     this.setState({ destinations: newBody.data })
-  //       if (this.state.arrivals !== null && this.state.destinations !== null) {
-  //         this.state.arrivals.forEach(arrival => {
-  //           this.mappedMatchedPredictions = this.state.destinations.map(destination => {
-  //           if (arrival.relationships.trip.data.id == destination.relationships.trip.data.id) {
-  //             return(
-  //               <DurationPredictionTile
-  //               key={arrival.attributes.id}
-  //               arrival={arrival}
-  //               destination={destination}
-  //               />
-  //             )
-  //           }
-  //         })
-  //       })
-  //         if (typeof mappedMatchedPredictions !== 'undefined'){
-  //           let this.mappedMatchedPredictions = this.mappedMatchedPredictions.filter((object) => {
-  //             return (object !== undefined)
-  //           })
-  //         }
-  //     }
-  //   })
-  //   .catch(error => console.error(`Error in fetch: ${error.message}`));
-  // }
 
   fetchArrivalsAndDestinations(){
     let endpoints = [`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.arrivalMbtaId}`, `https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.destinationMbtaId}`]
@@ -107,6 +49,7 @@ class DurationPrediction extends Component {
     let mappedMatchedPredictions = this.state.matchedPredictions.map(trip => {
         return(
              <DurationPredictionTile
+             id={this.props.id}
              key={trip.arrival.id}
              arrival={trip.arrival}
              destination={trip.destination}

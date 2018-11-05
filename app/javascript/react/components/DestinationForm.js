@@ -5,12 +5,7 @@ class DestinationForm extends Component {
   constructor(props){
     super(props)
 
-    this.handleChange = this.handleChange.bind(this)
     this.handleFormChange = this.handleFormChange.bind(this)
-  }
-
-  handleChange(event) {
-    this.props.handlePayload(event.target.value)
   }
 
   handleFormChange(event) {
@@ -27,8 +22,8 @@ class DestinationForm extends Component {
       return (
           <div>
               <label className="field-name">{this.props.label}</label>
-                <label className="select select-l" htmlFor="select-l">
-                  <select id="select-x" name="destinationStops" onChange={this.handleFormChange}>
+                <label className="select select-s" htmlFor="select-s">
+                  <select id="select-s" name="destinationStops" onChange={this.handleFormChange}>
                 {stopOptions}
               </select>
             </label>

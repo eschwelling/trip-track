@@ -64,3 +64,43 @@
 @keyframes fadeOut {
   50% { opacity: 1; }
 }
+
+.new_user {
+  margin: 0rem 8rem;
+}
+
+.sign_up {
+  font-family: 'Rubik', sans-serif;
+  display: inline-block;
+  margin-left: 10rem;
+  color: green;
+  vertical-align: bottom;
+}
+
+.sign_up a{
+  font-family: 'Rubik', sans-serif;
+  display: inline-block;
+  margin-left: 10rem;
+  color: green;
+}
+
+#actions {
+  font-family: 'Rubik', sans-serif;
+  display: inline-block;
+  margin-left: 10rem;
+  color: green;
+}
+
+.new_user{
+  font-family: 'Rubik', sans-serif;
+  /* display: inline-block; */
+  margin-left: 10rem;
+  color: green;
+}
+
+/* .new_user a{
+  font-family: 'Rubik', sans-serif;
+  display: inline-block;
+  margin-left: 10rem;
+  color: green;
+} */

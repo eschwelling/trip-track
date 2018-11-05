@@ -41,8 +41,8 @@ class LineForm extends Component{
     })
 
     return(
-            <label className="select select-l" htmlFor="select-l">
-              <select id="select-l" name="line" onChange={this.handleChange}>
+            <label className="select select-s" htmlFor="select-s">
+              <select id="select-s" name="line" onChange={this.handleChange}>
                 {lines}
               </select>
             </label>

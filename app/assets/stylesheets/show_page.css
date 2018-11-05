@@ -24,6 +24,11 @@
 #your-commutes{
   font-family: 'Rubik', sans-serif;
   display: inline-block;
+  margin-bottom: .1rem;
+}
+
+#prediction-list {
+  margin-left: 2rem;
 }
 
 .hidden {
@@ -57,10 +62,12 @@
 .journeyTile h3 {
   font-family: 'Rubik', sans-serif;
   color: green;
+  font-size: 1rem;
 }
 .journeyTile h1 {
   font-family: 'Rubik', sans-serif;
   color: black;
+  font-size: 1rem;
 }
 
 .field-name {
@@ -84,6 +91,32 @@
 }
 
 .predictions-show {
-  margin: 0;
   font-family: 'Rubik', sans-serif;
+  padding: 0rem 2rem;
 }
+
+.predictions-show h3{
+  margin-top: 7rem;
+  text-align: left;
+  padding: 0rem;
+}
+
+.predictions-show h1{
+  margin-top: 5rem;
+}
+
+.divider {
+  position:absolute;
+  left:50%;
+  top:10%;
+  bottom:10%;
+  border-left:1px solid black;
+}
+
+#journey-show-route{
+  padding-top: 2rem;
+}
+
+span {
+    display:inline-block;
+  }

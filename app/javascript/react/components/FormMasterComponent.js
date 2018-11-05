@@ -11,7 +11,7 @@ class FormMasterComponent extends Component{
   constructor(props){
     super(props)
     this.state = {
-      line_id: "",
+      line_id: "701",
       line: [],
       origin: "",
       formOrigin: "",
@@ -20,8 +20,9 @@ class FormMasterComponent extends Component{
       originStops: [],
       destinationStops: [],
       journeys: [],
-      direction_id: null,
-      error: ""
+      direction_id: 0,
+      error: "",
+      loading: false
     }
     this.chooseLine = this.chooseLine.bind(this)
     this.chooseFormOrigin = this.chooseFormOrigin.bind(this)
@@ -81,7 +82,6 @@ class FormMasterComponent extends Component{
 
   chooseFormOrigin(originFormPayload) {
     event.preventDefault();
-    debugger;
     this.setState({ formOrigin: originFormPayload})
     fetch('/api/v1/stops')
     .then(response => {
@@ -104,6 +104,7 @@ class FormMasterComponent extends Component{
   }
 
   chooseFormDestination(destinationFormPayload) {
+    debugger;
     event.preventDefault();
     this.setState({ formDestination: destinationFormPayload})
     fetch('/api/v1/stops')
@@ -118,6 +119,7 @@ class FormMasterComponent extends Component{
     })
     .then(response => response.json())
     .then(body => {
+      debugger;
         body.forEach(stop => {
         if (stop.mbta_id == destinationFormPayload)
         this.setState({ destination: stop })
@@ -262,7 +264,7 @@ class FormMasterComponent extends Component{
           </div>
         </div>
       </div>
-      <div className="small-4 medium columns">
+      <div className="divider small-4 medium columns">
       </div>
       <div className="small-4 medium columns journey-section">
         <h1 id="your-commutes">Your Commutes:</h1>

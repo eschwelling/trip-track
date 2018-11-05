@@ -14,8 +14,8 @@ class DirectionSelector extends Component {
 
   render(){
     return(
-      <label className="select select-l" htmlFor="select-l">
-      <select id="select-l" name="directionMenu" onChange={this.handleFormChange}>
+      <label className="select select-s" htmlFor="select-s">
+      <select id="select-s" name="directionMenu" onChange={this.handleFormChange}>
         <option value='0'>Inbound</option>
         <option value='1'>Outbound</option>
       </select>

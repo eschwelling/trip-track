@@ -13,7 +13,10 @@ Rails.application.routes.draw do
       resources :lines, only: [:index]
       resources :stops, only: [:index]
       get '/stops/search', to: 'stops#search'
-      resources :journeys, only: [:index, :create, :show, :destroy]
+      resources :journeys, only: [:index, :create, :show, :destroy] do
+        resources :notes, only: [:index, :create]
+        resources :trips, only: [:index, :create, :show]
+      end
     end
   end
 end
