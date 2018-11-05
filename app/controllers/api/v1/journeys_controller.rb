@@ -3,15 +3,16 @@ class Api::V1::JourneysController < ApplicationController
   # before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @user_journeys = []
+    # @user_journeys = []
     @journeys = Journey.all
 
-      @journeys.each do |journey|
-        if journey.user == current_user
-          @user_journeys << journey
-        end
-      end
-    render json: @user_journeys, adapter: :json
+    #   @journeys.each do |journey|
+    #     if journey.user == current_user
+    #       @user_journeys << journey
+    #     end
+    #   end
+    # render json: @user_journeys, adapter: :json
+    render json: @journeys, adapter: :json
   end
 
   def show
@@ -23,7 +24,6 @@ class Api::V1::JourneysController < ApplicationController
   end
 
   def create
-
     @origin = Stop.find(params[:origin])
     @destination = Stop.find(params[:destination])
     @line = Line.find(params[:line])

@@ -11,6 +11,7 @@ class FormMasterComponent extends Component{
   constructor(props){
     super(props)
     this.state = {
+      line_id: "",
       line: [],
       origin: "",
       formOrigin: "",
@@ -23,18 +24,13 @@ class FormMasterComponent extends Component{
       error: ""
     }
     this.chooseLine = this.chooseLine.bind(this)
-    this.chooseOrigin = this.chooseOrigin.bind(this)
     this.chooseFormOrigin = this.chooseFormOrigin.bind(this)
-    this.chooseDestination = this.chooseDestination.bind(this)
     this.chooseFormDestination = this.chooseFormDestination.bind(this)
     this.masterButton = this.masterButton.bind(this)
     this.chooseDirection = this.chooseDirection.bind(this)
     this.deleteJourney = this.deleteJourney.bind(this)
+    this.fetchStopsLineDirectionId = this.fetchStopsLineDirectionId.bind(this)
   }
-
-
-  // after selecting a inbound direction_id
-  // originStops state is still there, but we have logic in render that has filtered out all of the outbout stops and passes those stops to the OriginForm
 
   componentDidMount() {
     fetch(`/api/v1/journeys`)
@@ -56,41 +52,85 @@ class FormMasterComponent extends Component{
 
   chooseLine(linePayload) {
     event.preventDefault();
-    this.setState({ line: linePayload})
+    this.setState({ line_id: linePayload})
+    fetch('/api/v1/lines')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+        body.forEach(line => {
+        if (line.mbta_id == linePayload)
+        this.setState({ line: line })
+      })
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
   chooseDirection(directionPayload) {
     event.preventDefault();
     this.setState({ direction_id: directionPayload})
-  }
-
-  chooseOrigin(originPayload) {
-    event.preventDefault();
-    this.fetchStops(originPayload, "originStops")
-    this.setState({ origin: originPayload})
+    this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
   }
 
   chooseFormOrigin(originFormPayload) {
     event.preventDefault();
+    debugger;
     this.setState({ formOrigin: originFormPayload})
-  }
-
-  chooseDestination(destinationPayload) {
-    event.preventDefault();
-    this.fetchStops(destinationPayload, "destinationStops")
-    this.setState({ destination: destinationPayload})
+    fetch('/api/v1/stops')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+        body.forEach(stop => {
+        if (stop.mbta_id == originFormPayload)
+        this.setState({ origin: stop })
+      })
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
   chooseFormDestination(destinationFormPayload) {
     event.preventDefault();
     this.setState({ formDestination: destinationFormPayload})
+    fetch('/api/v1/stops')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+        body.forEach(stop => {
+        if (stop.mbta_id == destinationFormPayload)
+        this.setState({ destination: stop })
+      })
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
   masterButton(event) {
     let journey = {
-      line: parseInt(this.state.line),
-      origin: parseInt(this.state.formOrigin),
-      destination: parseInt(this.state.formDestination),
+      line: this.state.line.id,
+      origin: this.state.origin.id,
+      destination: this.state.destination.id,
       direction: parseInt(this.state.direction_id),
       user: parseInt(this.props.params.id)
     }
@@ -118,12 +158,12 @@ class FormMasterComponent extends Component{
       swal("Your commute has been saved!");
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
-    swal("Error! Try Again!");
+    swal("You screwed up man!");
     event.preventDefault();
   }
 
-  fetchStops(query, stopArray) {
-    fetch(`/api/v1/stops/search?search_string=${query}`)
+  fetchStopsLineDirectionId(direction_id, line_id) {
+    fetch(`https://api-v3.mbta.com/stops?filter%5Bdirection_id%5D=${this.state.direction_id}&filter%5Broute%5D=${this.state.line_id}`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -135,10 +175,11 @@ class FormMasterComponent extends Component{
     })
     .then(response => response.json())
     .then(body => {
-      this.setState({ [stopArray]: body })
+      this.setState({ originStops: body.data })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
+
 
   deleteJourney(id) {
     event.preventDefault();
@@ -213,7 +254,7 @@ class FormMasterComponent extends Component{
                   label="destination"
                   handlePayload={this.chooseDestination}
                   handleFormChange={this.chooseFormDestination}
-                  stops={this.state.destinationStops}
+                  stops={this.state.originStops}
                   value={this.state.destination}
                   />
                 <input className="success button button-block commute-chooser" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>

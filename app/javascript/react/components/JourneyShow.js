@@ -51,12 +51,12 @@ class JourneyShow extends Component {
   render() {
       return(
         <div className="row">
-          <div className="small-12 medium-8 large-6 columns predictions-show">
+          <div className="small-6 medium-8 large-6 columns predictions-show">
             <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
             <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
             <h1>line: <span className="prediction-text">{this.state.line.name}</span></h1>
           </div>
-            <div className="small-12 columns predictions-show">
+            <div className="small-6 medium-8 large-6 columns predictions-show">
             <h3>predictions:</h3>
                 {
                   this.state.presenceOfId &&

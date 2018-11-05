@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2018_11_01_223313) do
     t.string "name", null: false
     t.string "short_name", null: false
     t.string "description", null: false
+    t.string "mbta_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
