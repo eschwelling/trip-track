@@ -35,4 +35,4 @@ feature 'user registers', %Q{
 #     expect(page).to have_content("can't be blank")
 #     expect(page).to_not have_content('Sign Out')
 #   end
-# end
+end

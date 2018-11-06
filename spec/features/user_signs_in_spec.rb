@@ -26,4 +26,4 @@ feature 'user signs in', %Q{
 #     expect(page).to have_content('Invalid Email or password')
 #     expect(page).to_not have_content('Sign Out')
 #   end
-# end
+end
