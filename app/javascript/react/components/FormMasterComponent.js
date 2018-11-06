@@ -22,7 +22,8 @@ class FormMasterComponent extends Component{
       journeys: [],
       direction_id: 0,
       error: "",
-      loading: false
+      loading: false,
+      user: {}
     }
     this.chooseLine = this.chooseLine.bind(this)
     this.chooseFormOrigin = this.chooseFormOrigin.bind(this)
@@ -31,9 +32,11 @@ class FormMasterComponent extends Component{
     this.chooseDirection = this.chooseDirection.bind(this)
     this.deleteJourney = this.deleteJourney.bind(this)
     this.fetchStopsLineDirectionId = this.fetchStopsLineDirectionId.bind(this)
+    this.fetchUser = this.fetchUser.bind(this)
   }
 
   componentDidMount() {
+    this.fetchUser();
     fetch(`/api/v1/journeys`)
     .then(response => {
       if (response.ok) {
@@ -128,13 +131,31 @@ class FormMasterComponent extends Component{
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
+  fetchUser(){
+    fetch('/api/v1/users')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+        this.setState({ user: body })
+      })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
+  }
+
   masterButton(event) {
     let journey = {
       line: this.state.line.id,
       origin: this.state.origin.id,
       destination: this.state.destination.id,
       direction: parseInt(this.state.direction_id),
-      user: parseInt(this.props.params.id)
+      user: parseInt(this.state.user.id)
     }
     fetch('/api/v1/journeys', {
       method: 'POST',
@@ -234,9 +255,9 @@ class FormMasterComponent extends Component{
     })
     return(
       <div className="row">
-      <div className="left small-4 medium columns">
+      <div className="left small-5 medium-4 columns">
         <div className="train-line-form">
-          <div className="rows columns">
+          <div className="rows">
             <h1>Please select your commute</h1>
               <form onSubmit={this.masterButton}>
                 <LineForm
@@ -264,9 +285,9 @@ class FormMasterComponent extends Component{
           </div>
         </div>
       </div>
-      <div className="divider small-4 medium columns">
+      <div className="divider small-2 medium-4 columns">
       </div>
-      <div className="small-4 medium columns journey-section">
+      <div className="small-5 medium-4 columns journey-section">
         <h1 id="your-commutes">Your Commutes:</h1>
           {journeys}
       </div>

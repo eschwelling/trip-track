@@ -2,12 +2,18 @@ import React from 'react'
 
 const NoteTile = (props) => {
   return(
-    <div key={props.id}>
-      <h5>{props.body}</h5>
-      <h5>{props.created_at}</h5>
-      <h5>{props.user.user_name}</h5>
-      <img src={props.photo.url}/>
+    <div className="row">
+      <div className="small-12 columns">
+        <div className="note-tile" key={props.id}>
+          <div key={props.id} className="note-text">
+            <p>{props.date}</p>
+            <h5>{props.body}</h5>
+            <p> - by: {props.user.user_name}</p>
+          </div>
+          <img src={props.photo.url}/>
+        </div>
     </div>
+  </div>
   )
 }
 

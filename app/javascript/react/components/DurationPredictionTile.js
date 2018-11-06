@@ -32,13 +32,13 @@ class DurationPredictionTile extends Component {
           throw(error);
         }
       })
-      event.preventDefault();
     }
 
     componentDidMount(){
-      this.saveTrips();
+        this.saveTrips();
     }
     render() {
+
       let arrivalTime = this.props.arrival.attributes.arrival_time
       let destinationTime = this.props.destination.attributes.arrival_time
 

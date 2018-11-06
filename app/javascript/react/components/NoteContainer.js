@@ -79,7 +79,8 @@ class NoteContainer extends Component {
     let mappedNotes = this.state.notes.map(note => {
       return(
         <NoteTile
-          created_at={note.created_at}
+          date={note.date}
+          key={note.id}
           id={note.id}
           body={note.body}
           user={this.state.user}
@@ -97,7 +98,7 @@ class NoteContainer extends Component {
             handlePhoto={this.handlePhotoFile}
           />
         </div>
-        <div>
+        <div className="all-notes">
           {mappedNotes}
         </div>
       </div>

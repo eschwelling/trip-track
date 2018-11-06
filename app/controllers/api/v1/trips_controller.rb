@@ -20,7 +20,6 @@ class Api::V1::TripsController < ApplicationController
 
     @trip = Trip.new(trip_params)
     @trip.journey = @journey
-
     if @trip.save
       render json: @trip
     else

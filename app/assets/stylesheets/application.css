@@ -104,3 +104,22 @@
   margin-left: 10rem;
   color: green;
 } */
+
+.sign-out{
+  background-color: green;
+}
+
+.top-bar-section ul li > a.button {
+  /* margin: 1rem; */
+  font-size: 0.8125rem;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  background-color: #107F12;
+  border-color: #007095;
+  color: #FFFFFF;
+}
+
+.top-bar-section ul li {
+  background: 0;
+  float: right
+}

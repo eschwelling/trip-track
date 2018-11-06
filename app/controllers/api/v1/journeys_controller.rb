@@ -4,15 +4,15 @@ class Api::V1::JourneysController < ApplicationController
 
   def index
     # @user_journeys = []
-    @journeys = Journey.all
-
+    # journeys = Journey.all
+    journeys = current_user.journeys
     #   @journeys.each do |journey|
     #     if journey.user == current_user
     #       @user_journeys << journey
     #     end
     #   end
     # render json: @user_journeys, adapter: :json
-    render json: @journeys, adapter: :json
+    render json: journeys, adapter: :json
   end
 
   def show

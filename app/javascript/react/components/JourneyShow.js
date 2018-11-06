@@ -51,6 +51,7 @@ class JourneyShow extends Component {
 
   render() {
       return(
+        <div>
         <div className="row">
           <div id="journey-show-route" className="small-4 medium-8 large-6 columns predictions-show">
             <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
@@ -73,12 +74,15 @@ class JourneyShow extends Component {
                     />
                 }
           </div>
-            <div className="notes">
-              <NoteContainer
-                id={this.props.params.id}
-                />
-            </div>
         </div>
+            <div className="row">
+              <div className="notes">
+                <NoteContainer
+                  id={this.props.params.id}
+                  />
+              </div>
+            </div>
+          </div>
       )
     }
   }
