@@ -12,34 +12,21 @@
 </head>
 <body>
 
-  <%- if current_user -%>
-      <nav class="top-bar">
-      <ul class="title-area">
-        <li class="name">
-          <h1><a href="/users/<%= current_user.id %>">TripTrack</a></h1>
-        </li>
-      </ul>
-    <%- else -%>
-          <nav class="top-bar">
-          <ul class="title-area">
-            <li class="name">
-              <h1><a href="/">TripTrack</a></h1>
-            </li>
-          </ul>
-    <%- end -%>
-
-  <section class="top-bar-section">
-    <ul class="right">
+  <!-- <div id="home-nav-bar" class="top-bar-section">
       <%- if current_user -%>
-        <li><%= image_tag "#{current_user.profile_photo}", size: "40x40" %></li>
-        <li><%= link_to 'Sign Out', destroy_user_session_path, method: :delete %></li>
+        <% if current_user.profile_photo.nil? %>
+          <p><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: "button button-pill sign-out" %></p>
+        <%- else -%>
+          <p><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: "button button-pill sign-out" %></p>
+          <p><%= image_tag "#{current_user.profile_photo}", size: "100x100" %></p>
+        <% end %>
       <%- else -%>
-        <li><%= link_to 'Sign Up', new_user_registration_path %></li>
-        <li><%= link_to 'Sign In', new_user_session_path %></li>
+        <p><%= link_to 'Sign Up', new_user_registration_path, class: "button button-pill" %></p>
+        <p><%= link_to 'Sign In', new_user_session_path, class: "button button-pill" %></p>
       <%- end -%>
-    </ul>
-  </section>
-</nav>
+    </div> -->
+
+
 
   <%- flash.each do |key, value| -%>
     <div class="flash flash-<%= key %>">

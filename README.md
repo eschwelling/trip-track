@@ -1,4 +1,6 @@
-# README
+# TripTrack
+
+TripTrack is an application for tracking MBTA bus trip times.
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

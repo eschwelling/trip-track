@@ -21,16 +21,15 @@ class OriginForm extends Component {
     render(){
       let stopOptions = this.props.stops.map(stop => {
         return(
-            <option key={stop.id} value={stop.id}>{stop.name}</option>
+            <option key={stop.id} value={stop.id}>{stop.attributes.name}</option>
           )
       })
 
       return (
             <div>
                 <label className="field-name">{this.props.label}</label>
-                <input type="text" name={this.props.label} id={this.props.label} value={this.props.value} onChange={this.handleChange}/>
-                <label className="select select-xl" htmlFor="select-xl">
-                <select id="select-xl" name="originStops" onChange={this.handleFormChange}>
+                <label className="select select-s" htmlFor="select-s">
+                <select id="select-s" name="originStops" onChange={this.handleFormChange}>
                   {stopOptions}
                 </select>
                 </label>

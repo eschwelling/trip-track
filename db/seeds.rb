@@ -21,7 +21,8 @@ all_lines_external["data"].each do |line|
   line_name = line["attributes"]["long_name"]
   short_name = line["attributes"]["short_name"]
   description = line["attributes"]["description"]
-  Line.create!(name: line_name, short_name: short_name, description: description)
+  mbta_id = line["id"]
+  Line.create!(name: line_name, short_name: short_name, description: description, mbta_id: mbta_id)
 end
 
 all_stops_external["data"].each do |stop|

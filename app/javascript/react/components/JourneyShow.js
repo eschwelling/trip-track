@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import DepartureTime from './DepartureTime'
 import OriginPrediction from './OriginPrediction'
 import DestinationPrediction from './DestinationPrediction'
 import DurationPrediction from './DurationPrediction'
+import NoteContainer from './NoteContainer'
+
 
 
 class JourneyShow extends Component {
@@ -50,17 +51,20 @@ class JourneyShow extends Component {
 
   render() {
       return(
+        <div>
         <div className="row">
-          <div className="small-12 medium-8 large-6 columns predictions-show">
+          <div id="journey-show-route" className="small-4 medium-8 large-6 columns predictions-show">
             <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
             <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
-            <h1>line: <span className="prediction-text">{this.state.line.name}</span></h1>
+            <h1>line: <span className="prediction-text">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
           </div>
-            <div className="small-12 columns predictions-show">
-            <h3>predictions:</h3>
+          <div className="divider small-4 medium columns"></div>
+            <div className="small-4 medium-8 large-6 columns predictions-show">
+            <h3 className="predictions-show">predictions:</h3>
                 {
                   this.state.presenceOfId &&
                   <DurationPrediction
+                    id={this.props.params.id}
                     originHandlePayload = {this.getOriginArrivalTimes}
                     destinationHandlePayload = {this.getDestinationArrivalTimes}
                     arrivalMbtaId = {this.state.origin.mbta_id}
@@ -71,6 +75,14 @@ class JourneyShow extends Component {
                 }
           </div>
         </div>
+            <div className="row">
+              <div className="notes">
+                <NoteContainer
+                  id={this.props.params.id}
+                  />
+              </div>
+            </div>
+          </div>
       )
     }
   }
