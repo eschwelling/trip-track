@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   # resources :users, only: [:show]
   get '/home', to: 'users#show'
-  get '/users/sign_out', to: "devise/sessions#destroy"
+  # get '/users/sign_out', to: "devise/sessions#destroy"
     # get '/users/sign_out', to: "homes#index"
     # get '/users/sign_in', to: 'devise/sessions#new'
     # get '/users/sign_up', to: 'devise/registrations#new'
@@ -14,10 +14,6 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      devise_scope :user do
-        resources :sessions, defaults: {format: :json}
-        resources :registrations, defaults: {format: :json}
-      end
         resources :users, only: [:index]
         resources :lines, only: [:index]
         resources :stops, only: [:index]
