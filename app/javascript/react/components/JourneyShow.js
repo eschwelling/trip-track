@@ -53,28 +53,28 @@ class JourneyShow extends Component {
   render() {
       return(
         <div>
-        <div className="row">
-          <div id="journey-show-route" className="small-4 medium-8 large-6 columns predictions-show">
-            <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
-            <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
-            <h1>line: <span className="prediction-text">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
-          </div>
-          <div className="divider small-4 medium columns"></div>
-            <div className="small-4 medium-8 large-6 columns predictions-show">
-            <h3 className="predictions-show">predictions:</h3>
-                {
-                  this.state.presenceOfId &&
-                  <DurationPrediction
-                    id={this.props.params.id}
-                    originHandlePayload = {this.getOriginArrivalTimes}
-                    destinationHandlePayload = {this.getDestinationArrivalTimes}
-                    arrivalMbtaId = {this.state.origin.mbta_id}
-                    destinationMbtaId = {this.state.destination.mbta_id}
-                    originArrivalTimes = {this.state.originArrivalPredictions}
-                    destinationArrivalTimes = {this.state.destinationArrivalPredictions}
-                    />
-                }
-          </div>
+          <div className="row">
+            <div id="journey-show-route" className="small-4 medium-8 large-6 columns">
+              <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
+              <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
+              <h1>line: <span className="prediction-text">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
+            </div>
+            <div className="divider small-4 medium columns"></div>
+              <div className="small-4 medium-8 large-6 columns predictions-show">
+              <h3 className="predictions-show">predictions:</h3>
+                  {
+                    this.state.presenceOfId &&
+                    <DurationPrediction
+                      id={this.props.params.id}
+                      originHandlePayload = {this.getOriginArrivalTimes}
+                      destinationHandlePayload = {this.getDestinationArrivalTimes}
+                      arrivalMbtaId = {this.state.origin.mbta_id}
+                      destinationMbtaId = {this.state.destination.mbta_id}
+                      originArrivalTimes = {this.state.originArrivalPredictions}
+                      destinationArrivalTimes = {this.state.destinationArrivalPredictions}
+                      />
+                  }
+            </div>
         </div>
           <div>
             <ExampleChart

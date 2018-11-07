@@ -4,7 +4,9 @@
   <title>TripTrack</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <%= stylesheet_link_tag 'application', media: 'all' %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bigfishtv-turret/4.0.0/turret.min.css" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Rubik:900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
 
     <%= javascript_include_tag "vendor/modernizr" %>
 
@@ -25,14 +27,6 @@
         <p><%= link_to 'Sign In', new_user_session_path, class: "button button-pill" %></p>
       <%- end -%>
     </div> -->
-
-
-
-  <%- flash.each do |key, value| -%>
-    <div class="flash flash-<%= key %>">
-      <%= value %>
-    </div>
-  <%- end -%>
 
   <%= yield %>
 
