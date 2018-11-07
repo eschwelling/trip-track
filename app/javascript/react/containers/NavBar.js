@@ -9,7 +9,6 @@ class NavBar extends Component {
     this.state = {
       currentUser: {}
     }
-    this.userSignOut = this.userSignOut.bind(this);
   }
 
   componentDidMount() {
@@ -37,31 +36,6 @@ class NavBar extends Component {
    .catch(error => console.error(`Error in fetch: ${error.message}`));
  }
 
-  userSignOut(event) {
-   fetch('/users/sign_out',
-   {
-     method: 'DELETE',
-     credentials: 'same-origin',
-     headers: {
-       'Accept': 'application/json',
-       'Content-Type': 'application/json'
-     }
-   })
-   .then(response => {
-     if (response.ok) {
-       return response;
-     } else {
-       let errorMessage = `${response.status} (${response.statusText})`,
-         error = new Error(errorMessage);
-       throw error;
-     }
-   })
-   .then(response => {
-     this.setState({ currentUser: null });
-   })
-   .catch(error => console.error(`Error in fetch: ${error.message}`));
- }
-
  render() {
   const children = React.Children.map(this.props.children, child => {
     return React.cloneElement(child, {
@@ -74,7 +48,7 @@ class NavBar extends Component {
       <div>
         <div className="react-nav-bar">
           <Link className="home-button button button-pill" to={`/home`}>Home!</Link>
-          <Link className="home-button button button-pill" to={'/'} onClick={this.userSignOut}>Sign Out!</Link>
+          <a className="home-button button button-pill" href={'/users/sign_out'}>Sign Out!</a>
           <h1 className="main-header">TripTrack</h1>
         </div>
         {this.props.children}

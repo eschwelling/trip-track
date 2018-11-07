@@ -1,11 +1,11 @@
 class Api::V1::UsersController < ApplicationController
-  protect_from_forgery unless: -> { request.format.json? }
-
-  skip_before_action :verify_authenticity_token
-
-  before_action :authenticate_user!, only: [:destroy]
-
-  prepend_before_action(only: [:destroy]) { request.env[“devise.skip_timeout”] = true }
+  # protect_from_forgery unless: -> { request.format.json? }
+  #
+  # skip_before_action :verify_authenticity_token
+  #
+  # before_action :authenticate_user!, only: [:destroy]
+  #
+  # prepend_before_action(only: [:destroy]) { request.env[“devise.skip_timeout”] = true }
 
   def index
     @user = current_user
