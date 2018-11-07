@@ -15,8 +15,6 @@
  *= require foundation_and_overrides
  *= require splash_page
  *= require show_page
-
-
  */
 
 .flash-notice {
@@ -26,14 +24,14 @@
   padding: 1rem;
   margin-left: 1rem;
   background-color: black;
-  color: white;
-  font-family: monospace;
+  color: #018000;
+  /* font-family: monospace;
   font-size: 2rem;
   border: .25rem;
   border-style: solid;
   border-radius: .5rem;
   -webkit-animation: fadeOut 3s linear forwards;
-  animation: fadeOut 3s linear forwards;
+  animation: fadeOut 3s linear forwards; */
   opacity: 0;
 }
 
@@ -57,23 +55,11 @@
   opacity: 0;
 }
 
-@-webkit-keyframes fadeOut {
-  50% { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  50% { opacity: 1; }
-}
-
-.new_user {
-  margin: 0rem 8rem;
-}
-
 .sign_up {
   font-family: 'Rubik', sans-serif;
   display: inline-block;
   margin-left: 10rem;
-  color: green;
+  color: white;
   vertical-align: bottom;
 }
 
@@ -81,7 +67,7 @@
   font-family: 'Rubik', sans-serif;
   display: inline-block;
   margin-left: 10rem;
-  color: green;
+  color: white;
 }
 
 #actions {
@@ -92,25 +78,20 @@
 }
 
 .new_user{
+  margin: 10rem 4rem;
   font-family: 'Rubik', sans-serif;
-  /* display: inline-block; */
-  margin-left: 10rem;
-  color: green;
 }
 
-/* .new_user a{
-  font-family: 'Rubik', sans-serif;
-  display: inline-block;
-  margin-left: 10rem;
-  color: green;
-} */
+.new_user label{
+  color: white;
+}
+
 
 .sign-out{
   background-color: green;
 }
 
 .top-bar-section ul li > a.button {
-  /* margin: 1rem; */
   font-size: 0.8125rem;
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
@@ -121,5 +102,9 @@
 
 .top-bar-section ul li {
   background: 0;
-  float: right
+  float: right;
+}
+
+.log-in {
+  background-color: #107F12;
 }

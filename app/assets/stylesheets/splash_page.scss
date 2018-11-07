@@ -1,0 +1,53 @@
+.splash-background {
+  background-color: #018000;
+  padding: 20rem 0rem;
+}
+
+.main-headline{
+  text-align: center;
+  display: inline-flex;
+  margin: 5rem 0rem;
+  font-family: 'Rubik', sans-serif;
+  font-size: 10rem;
+  color: white;
+  background-color: black;
+  border: 1rem;
+  border-style: solid;
+  padding: 0rem 1rem;
+}
+//
+.splash-page {
+  margin-top: 8rem;
+}
+//
+// #splash-row {
+//   margin: 0;
+//   display: inline-block;
+//
+// }
+
+
+.footer {
+  padding: 3rem 0rem 0rem 0rem;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  color: white;
+  text-align: center;
+}
+
+.footer h3{
+  color: black;
+  display: inline-block;
+  float: right;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.mbta-img{
+  float: right;
+  width: 20%;
+  height: auto;
+  display: inline-block;
+}

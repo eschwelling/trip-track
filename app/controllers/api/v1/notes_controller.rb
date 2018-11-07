@@ -16,7 +16,6 @@ class Api::V1::NotesController < ApplicationController
 
     if @note.save
       render json: {note: @note}, adapter: :json
-      binding.pry
     else
       render json: {errors: @note.errors.full_messages}
     end

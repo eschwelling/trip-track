@@ -3,15 +3,7 @@ class Api::V1::JourneysController < ApplicationController
   # before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    # @user_journeys = []
-    # journeys = Journey.all
     journeys = current_user.journeys
-    #   @journeys.each do |journey|
-    #     if journey.user == current_user
-    #       @user_journeys << journey
-    #     end
-    #   end
-    # render json: @user_journeys, adapter: :json
     render json: journeys, adapter: :json
   end
 
