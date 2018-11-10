@@ -1,12 +1,13 @@
 .splash-background {
   background-color: #018000;
-  padding: 20rem 0rem;
+  padding: 4rem 0rem;
+  height: auto;
 }
 
-.main-headline{
+#main-headline{
   text-align: center;
   display: inline-flex;
-  margin: 5rem 0rem;
+  margin: 2rem 0rem;
   font-family: 'Rubik', sans-serif;
   font-size: 10rem;
   color: white;
@@ -17,7 +18,7 @@
 }
 //
 .splash-page {
-  margin-top: 8rem;
+  margin-top: 0rem;
 }
 
 .footer {
