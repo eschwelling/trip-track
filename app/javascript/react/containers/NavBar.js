@@ -42,34 +42,22 @@ class NavBar extends Component {
       currentUser: this.state.currentUser
     });
   });
-
-  if (!this.state.currentUser) {
-    return(
-      <div>
-        <div className="react-nav-bar">
-          <Link className="home-button button button-pill" to={`/home`}>Home!</Link>
-          <a className="home-button button button-pill" href={'/users/sign_out'}>Sign Out!</a>
-          <h1 className="main-header">TripTrack</h1>
+  return(
+    <div className="">
+          <div className="react-nav-bar">
+            <div className="small-4 medium-6 large-6 columns">
+              <Link id="nav-button" className="home-button button button-pill" to={`/home`}>Home!</Link>
+              <a id="signout-button" className="home-button button button-pill" href={'/users/sign_out'}>Sign Out!</a>
+            </div>
+            <div className="small-4 medium-6 large-6 columns">
+              <h1 id="headline" className="main-header">TripTrack</h1>
+            </div>
         </div>
         {this.props.children}
-      </div>
-    )
-  } else {
-    return(
-      <div>
-        <div className="react-nav-bar">
-          <Link className="home-button button button-pill" to={`/home`}>Home!</Link>
-          <a className="home-button button button-pill" href={`/users/sign_in`}>Sign In!</a>
-          <a className="home-button button button-pill" href={`/users/sign_up`}>Sign Up!</a>
-          <h1 className="main-header">TripTrack</h1>
-        </div>
-        {this.props.children}
-      </div>
-    )
+    </div>
+  )
   }
-
-  }
-  }
+}
 
 
 export default NavBar;

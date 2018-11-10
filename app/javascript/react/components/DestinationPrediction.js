@@ -11,7 +11,6 @@ class DestinationPrediction extends Component {
   }
 
   getDestinationPredictions(){
-    console.log(this.props)
     fetch(`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.destinationMbtaId}`)
     .then(response => {
       if (response.ok) {

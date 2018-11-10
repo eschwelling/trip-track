@@ -4,13 +4,15 @@ const NoteTile = (props) => {
   return(
     <div className="row">
       <div className="small-12 columns">
-        <div className="note-tile" key={props.id}>
+        <div className="note-tile">
           <div key={props.id} className="note-text">
             <p>{props.date}</p>
             <h5>{props.body}</h5>
             <p> - by: {props.user.user_name}</p>
           </div>
-          <img src={props.photo.url}/>
+          <div className="small-6 columns">
+            <img src={props.photo.url}/>
+          </div>
         </div>
     </div>
   </div>

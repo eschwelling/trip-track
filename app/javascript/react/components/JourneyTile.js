@@ -17,9 +17,7 @@ class JourneyTile extends Component {
               <h5>From: {this.props.origin.name}</h5>
               <h5>To: {this.props.destination.name}</h5>
             </Link>
-            <button className="delete-button button button-s" onClick={this.props.handleDelete} type="delete" value="x">
-              <span className="delete">x</span>
-            </button>
+            <i className="far fa-times-circle fa-lg" onClick={this.props.handleDelete} type="delete"></i>
           </div>
         </div>
     )

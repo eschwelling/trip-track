@@ -18,10 +18,8 @@ class FormMasterComponent extends Component{
       destination: "",
       formDestination: "",
       originStops: [],
-      destinationStops: [],
       journeys: [],
       direction_id: 0,
-      error: "",
       loading: false,
       user: {}
     }
@@ -75,6 +73,7 @@ class FormMasterComponent extends Component{
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
+    this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
   }
 
   chooseDirection(directionPayload) {
@@ -85,7 +84,7 @@ class FormMasterComponent extends Component{
 
   chooseFormOrigin(originFormPayload) {
     event.preventDefault();
-    this.setState({ formOrigin: originFormPayload})
+    this.setState({ formOrigin: originFormPayload, loading: true})
     fetch('/api/v1/stops')
     .then(response => {
       if (response.ok) {
@@ -98,18 +97,17 @@ class FormMasterComponent extends Component{
     })
     .then(response => response.json())
     .then(body => {
-        body.forEach(stop => {
-        if (stop.mbta_id == originFormPayload)
-        this.setState({ origin: stop })
-      })
+          body.forEach(stop => {
+          if (stop.mbta_id == originFormPayload)
+          this.setState({ origin: stop, loading: false })
+        })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
   chooseFormDestination(destinationFormPayload) {
-    debugger;
     event.preventDefault();
-    this.setState({ formDestination: destinationFormPayload})
+    this.setState({ formDestination: destinationFormPayload, loading: true})
     fetch('/api/v1/stops')
     .then(response => {
       if (response.ok) {
@@ -122,10 +120,12 @@ class FormMasterComponent extends Component{
     })
     .then(response => response.json())
     .then(body => {
-      debugger;
+        if (destinationFormPayload.includes('place'))
+        swal("Data for this stop is not available right now. Sorry! Please choose the next closest stop.")
+
         body.forEach(stop => {
-        if (stop.mbta_id == destinationFormPayload)
-        this.setState({ destination: stop })
+          if (stop.mbta_id == destinationFormPayload)
+          this.setState({ destination: stop, loading: false })
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
@@ -181,12 +181,15 @@ class FormMasterComponent extends Component{
       swal("Your commute has been saved!");
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
-    swal("You screwed up man!");
+    swal("Save error. Please try again.");
     event.preventDefault();
   }
 
   fetchStopsLineDirectionId(direction_id, line_id) {
-    fetch(`https://api-v3.mbta.com/stops?filter%5Bdirection_id%5D=${this.state.direction_id}&filter%5Broute%5D=${this.state.line_id}`)
+    fetch(`https://api-v3.mbta.com/stops?api_key=${window.MBTAkey}&filter%5Bdirection_id%5D=${this.state.direction_id}&filter%5Broute%5D=${this.state.line_id}`, {
+      headers: {
+        'Accept-Encoding': 'gzip'
+      }})
     .then(response => {
       if (response.ok) {
         return response;
@@ -206,33 +209,49 @@ class FormMasterComponent extends Component{
 
   deleteJourney(id) {
     event.preventDefault();
-    fetch(`/api/v1/journeys/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json' },
-      credentials: 'same-origin'
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover your data!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
     })
-    .then(response => response.json())
-    .then(body => {
-      if(body.error) {
-        throw body.error
-      } else {
-        let newJourneys = this.state.journeys.filter(journey => {
-          return(
-            journey.id !== id
-          )
+    .then((willDelete) => {
+      if (willDelete) {
+          swal({
+            title: "Deleted",
+            text: "Done and done!",
+            icon: "success"
+          });
+        fetch(`/api/v1/journeys/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json' },
+          credentials: 'same-origin'
         })
-        this.setState({journeys: newJourneys})
+        .then(response => response.json())
+        .then(body => {
+          if(body.error) {
+            throw body.error
+          } else {
+            let newJourneys = this.state.journeys.filter(journey => {
+              return(
+                journey.id !== id
+              )
+            })
+            this.setState({journeys: newJourneys})
+          }
+        })
+        .catch(error => {
+          this.setState({error: error})
+          console.log("ERROR in FETCH")
+        })
+      } else {
+        swal("Good call. Have a great trip!");
       }
-    })
-    .catch(error => {
-      this.setState({error: error})
-      console.log("ERROR in FETCH")
-    })
-  }
-
-
+    });
+    }
 
   render() {
 
@@ -253,11 +272,52 @@ class FormMasterComponent extends Component{
           />
       )
     })
-    return(
-      <div className="row">
-      <div className="left small-5 medium-5 columns">
-        <div className="train-line-form">
-            <h1>Please select your commute</h1>
+
+    if (this.state.loading === true) {
+      return(
+        <div className="row">
+        <div className="left small-5 medium-5 columns">
+          <div className="train-line-form">
+              <h1>Please select your commute</h1>
+                <form onSubmit={this.masterButton}>
+                  <LineForm
+                    handlePayload={this.chooseLine}
+                    />
+                  <DirectionSelector
+                    handlePayload={this.chooseDirection}
+                    />
+                  <OriginForm
+                    label="origin"
+                    handlePayload={this.chooseOrigin}
+                    handleFormChange={this.chooseFormOrigin}
+                    stops={this.state.originStops}
+                    value={this.state.origin}
+                    />
+                  <DestinationForm
+                    label="destination"
+                    handlePayload={this.chooseDestination}
+                    handleFormChange={this.chooseFormDestination}
+                    stops={this.state.originStops}
+                    value={this.state.destination}
+                    />
+                  <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton} disabled/>
+              </form>
+          </div>
+        </div>
+        <div className="divider small-2 columns">
+        </div>
+        <div className="small-5 medium-5 columns journey-section">
+          <h1 id="your-commutes">Your Commutes:</h1>
+            {journeys}
+        </div>
+    </div>
+      )
+    } else {
+      return(
+        <div className="row">
+          <div className="left small-12 medium-5 large-5 columns">
+            <div className="train-line-form">
+              <h1>Please select your commute</h1>
               <form onSubmit={this.masterButton}>
                 <LineForm
                   handlePayload={this.chooseLine}
@@ -279,18 +339,19 @@ class FormMasterComponent extends Component{
                   stops={this.state.originStops}
                   value={this.state.destination}
                   />
-                <input className="master-form-button button button-block" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
-            </form>
+                <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.masterButton}/>
+              </form>
+            </div>
+          </div>
+          <div className="show-for-medium-up divider small-2 columns">
+          </div>
+          <div className="small-12 medium-5 large-5 columns journey-section">
+            <h1 id="your-commutes">Your Commutes:</h1>
+            {journeys}
+          </div>
         </div>
-      </div>
-      <div className="divider small-2 columns">
-      </div>
-      <div className="small-5 medium-5 columns journey-section">
-        <h1 id="your-commutes">Your Commutes:</h1>
-          {journeys}
-      </div>
-  </div>
-    )
+      )
+    }
   }
 }
 export default FormMasterComponent;
