@@ -5,7 +5,6 @@ import JourneyShow from '../components/JourneyShow'
 import NavBar from './NavBar'
 
 const App = (props) => {
-  // let userId = current_user.id
   return(
     <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
       <Route path ='/home' component={NavBar}>

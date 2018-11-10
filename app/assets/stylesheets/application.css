@@ -25,13 +25,6 @@
   margin-left: 1rem;
   background-color: black;
   color: #018000;
-  /* font-family: monospace;
-  font-size: 2rem;
-  border: .25rem;
-  border-style: solid;
-  border-radius: .5rem;
-  -webkit-animation: fadeOut 3s linear forwards;
-  animation: fadeOut 3s linear forwards; */
   opacity: 0;
 }
 
@@ -105,6 +98,33 @@
   float: right;
 }
 
+.spinner {
+  display: inline-block;
+}
+
 .log-in {
   background-color: #107F12;
+}
+
+#nav-button {
+  font-family: 'IBM Plex Sans', sans-serif;
+  border-left: 8rem;
+}
+#signout-button {
+  font-family: 'IBM Plex Sans', sans-serif;
+  /* margin: 0rem; */
+  margin-left: 0rem;
+}
+
+#nav-button:hover{
+	box-shadow: inset 0 0 0 3px #3a7999;
+}
+#signout-button:hover{
+	box-shadow: inset 0 0 0 3px #3a7999;
+}
+
+.button-resizing { margin: 0 7px; }
+
+.chart-button {
+  display: inline-block;
 }

@@ -3,7 +3,7 @@ import OriginPrediction from './OriginPrediction'
 import DestinationPrediction from './DestinationPrediction'
 import DurationPrediction from './DurationPrediction'
 import NoteContainer from './NoteContainer'
-import ExampleChart from './ExampleChart'
+import JourneyChart from './JourneyChart'
 
 
 
@@ -54,14 +54,14 @@ class JourneyShow extends Component {
       return(
         <div>
           <div className="row">
-            <div id="journey-show-route" className="small-4 medium-8 large-6 columns">
-              <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
-              <h1>destination: <span className="prediction-text">{this.state.destination.name}</span> </h1>
+            <div id="journey-show-route" className="small-12 medium-6 large-6 columns">
               <h1>line: <span className="prediction-text">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
+              <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
+              <h1>destination: <span className="prediction-text">{this.state.destination.name}</span></h1>
             </div>
-            <div className="divider small-4 medium columns"></div>
-              <div className="small-4 medium-8 large-6 columns predictions-show">
-              <h3 className="predictions-show">predictions:</h3>
+
+            <div className="small-12 medium-6 large-6 columns">
+              <div className="predictions-show-master">
                   {
                     this.state.presenceOfId &&
                     <DurationPrediction
@@ -74,12 +74,21 @@ class JourneyShow extends Component {
                       destinationArrivalTimes = {this.state.destinationArrivalPredictions}
                       />
                   }
-            </div>
+              </div>
+          </div>
         </div>
+
+
           <div>
-            <ExampleChart
-              id={this.props.params.id}
-              />
+            <div className="row">
+              <JourneyChart
+                id={this.props.params.id}
+                direction={this.state.direction}
+                line={this.state.line.mbta_id}
+                destination={this.state.destination.mbta_id}
+                origin={this.state.origin.mbta_id}
+                />
+            </div>
           </div>
             <div className="row">
               <div className="notes">
@@ -88,7 +97,7 @@ class JourneyShow extends Component {
                   />
               </div>
             </div>
-          </div>
+        </div>
       )
     }
   }

@@ -8,6 +8,8 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "babel-preset-react": "~6.24.1",
+    "dotenv": "^6.1.0",
+    "halogen": "^0.2.0",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "prop-types": "~15.6.0",

@@ -22,6 +22,7 @@ class NoteForm extends Component {
   render(){
     return(
       <div>
+        <hr/>
         <h3 className="trip-notes">Trip Notes</h3>
         <hr/>
         <label className="form-label">

@@ -27,7 +27,6 @@ class DurationPrediction extends Component {
       return Promise.all(parsedResponses)
     })
     .then(responses => {
-      console.log(responses)
       let matches = []
       responses[0].data.forEach((arrival) => {
         responses[1].data.forEach((destination) => {
@@ -36,7 +35,6 @@ class DurationPrediction extends Component {
           }
         })
       })
-      console.log(matches)
       this.setState({ matchedPredictions: matches })
     })
   }
