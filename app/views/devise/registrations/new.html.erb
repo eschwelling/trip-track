@@ -10,41 +10,41 @@
       </div>
 
     <div class="field-div">
-        <div class="field">
           <%= f.label :user_name, "User Name" %>
-          <%= f.text_field :user_name, autofocus: true, autocomplete: "user_name" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.text_field :user_name, autofocus: true, autocomplete: "user_name" %>
+          </div>
 
-        <div class="field">
           <%= f.label :first_name, "First Name" %>
-          <%= f.text_field :first_name, autofocus: true, autocomplete: "first_name" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.text_field :first_name, autofocus: true, autocomplete: "first_name" %>
+          </div>
 
-        <div class="field">
           <%= f.label :last_name, "Last Name" %>
-          <%= f.text_field :last_name, autofocus: true, autocomplete: "last_name" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.text_field :last_name, autofocus: true, autocomplete: "last_name" %>
+          </div>
 
-        <div class="field">
           <%= f.label :email %>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+          </div>
       </div>
 
-        <div class="field">
           <%= f.label :password %>
           <% if @minimum_password_length %>
           <em>(<%= @minimum_password_length %> characters minimum)</em>
           <% end %>
-          <%= f.password_field :password, autocomplete: "new-password" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.password_field :password, autocomplete: "new-password" %>
+          </div>
 
-        <div class="field">
           <%= f.label :password_confirmation, "Password Confirmation"%>
-          <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-        </div>
+          <div class="log-in-field">
+            <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+          </div>
 
-        <div class="field">
+        <div class="log-in-field">
           <%= f.label "Upload Profile Photo (Optional)" %>
         </div>
         <%= f.file_field :profile_photo %>
