@@ -87,10 +87,10 @@ class JourneyChart extends Component {
                 {
                   title: "Your Trips",
                   hAxis: {
-                    title: "Time of Day",
+                    title: "Time of Day (military time)",
                     viewWindow: { min: 0, max: 24 }
                   },
-                  vAxis: { title: "Length of Trip", viewWindow: { min: 0, max: 60 } },
+                  vAxis: { title: "Length of Trip (in minutes)", viewWindow: { min: 0, max: 60 } },
                   legend: "none"
                 }
               }
@@ -114,14 +114,13 @@ class JourneyChart extends Component {
                   }
                 ]}
                 options={
-                  // Chart options
                   {
                     title: "Scheduled Trips",
                     hAxis: {
-                      title: "Time of Day",
+                      title: "Time of Day (military time)",
                       viewWindow: { min: 0, max: 24 }
                     },
-                    vAxis: { title: "Length of Trip", viewWindow: { min: 0, max: 60 } },
+                    vAxis: { title: "Length of Trip (in minutes)", viewWindow: { min: 0, max: 60 } },
                     legend: "none"
                   }
                 }
