@@ -70,6 +70,7 @@ class FormMasterComponent extends Component{
         body.forEach(line => {
         if (line.mbta_id == linePayload)
         this.setState({ line: line })
+        this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
       })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));

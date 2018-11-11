@@ -134,7 +134,7 @@ class JourneyChart extends Component {
         );
       }
       return(
-          <div className="chart-button small-12 medium-8 large-6 columns">
+          <div className="chart-button small-4 medium-8 large-6 columns">
             <input onClick={this.fetchScheduleData} value="Get Charts" type="submit"/>
           </div>
       )

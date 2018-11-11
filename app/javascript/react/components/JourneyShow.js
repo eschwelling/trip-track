@@ -91,7 +91,7 @@ class JourneyShow extends Component {
             </div>
           </div>
             <div className="row">
-              <div className="notes">
+              <div className="small-10 medium-12 large-12 columns notes">
                 <NoteContainer
                   id={this.props.params.id}
                   />
