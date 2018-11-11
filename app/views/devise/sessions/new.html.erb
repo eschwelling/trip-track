@@ -1,7 +1,7 @@
 <div class="log-in">
   <h1 class="main-header">TripTrack</h1>
-  <div class="row">
-    <div class="small-4 medium-12 large-12 columns">
+  <div class="log-in-row row">
+    <div class="small-10 medium-8 large-12 columns">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <%= f.label :email %><br />
         <div class="log-in-field">
@@ -20,23 +20,24 @@
         </div>
       <% end -%>
 
-        <div class="small-4 columns">
+        <div class="small-10 columns">
           <div class="actions">
             <%= f.submit "Log in" %>
           </div>
         </div>
 
-        <div class="sign_up">
+        <div class="small-10 columns sign_up">
           <%= render "devise/shared/links" %>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="footer">
-      <img class="mbta-img" src="/MassDOT_Logos.jpg"/>
-    <h3>powered by</h3>
-  </div>
+
+    <div class="row">
+      <div class="small-6 columns footer">
+        <img class="mbta-img" src="/MassDOT_Logos.jpg"/>
+        <h3>powered by</h3>
+      </div>
+    </div>
   </div>
 <% end %>

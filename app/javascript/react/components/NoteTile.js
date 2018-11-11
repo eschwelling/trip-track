@@ -2,22 +2,31 @@ import React from 'react'
 
 const NoteTile = (props) => {
   return(
-    <div className="row">
-      <div className="small-12 columns">
-        <div className="note-tile">
+      <div className="">
+        <div className="note-tile small-10 medium-10 large-12 columns">
           <div key={props.id} className="note-text">
-            <p>{props.date}</p>
             <h5>{props.body}</h5>
-            <p> - by: {props.user.user_name}</p>
           </div>
-          <div className="small-6 columns">
-            <img src={props.photo.url}/>
-          </div>
+            <a href="#img1">
+              <img src={props.photo.url} className="thumbnail"/>
+            </a>
+
+            <a href="#" className="lightbox" id="img1">
+              <img src={props.photo.url}/>
+            </a>
+            <p className="note-user-name">{props.date}</p>
+            <p className="note-user-name"> - by: {props.user.user_name}</p>
         </div>
     </div>
-  </div>
   )
 }
+
+
+
+
+
+
+
 
 
 
