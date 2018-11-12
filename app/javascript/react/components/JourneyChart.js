@@ -38,6 +38,7 @@ class JourneyChart extends Component {
         let endpoints = [`https://api-v3.mbta.com/schedules?filter%5Broute%5D=${this.props.line}&filter%5Bstop%5D=${this.props.origin}`, `https://api-v3.mbta.com/schedules?filter%5Broute%5D=${this.props.line}&filter%5Bstop%5D=${this.props.destination}`]
 
         let promises = endpoints.map((endpoint) => {
+          debugger;
           return fetch(endpoint)
         })
 

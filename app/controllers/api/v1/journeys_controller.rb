@@ -61,22 +61,3 @@ class Api::V1::JourneysController < ApplicationController
     parsed_journey_params
   end
 end
-
-
-
-# 3)
-     #origin =  @journey.origin
-     #destination =  @journey.destination
-
-     # using the origin and the destination determine the direction
-
-     # Ping the api, for all of the current predictions for this stop
-     # parse into ruby hashes
-     # with those results, sort out the ones going in the right direction
-
-     # return those as a part of your json response
-
-# On the new journey form
-    # designate route/line
-    # '' direction
-      # at this point, behind the scenes

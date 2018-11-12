@@ -316,7 +316,7 @@ class FormMasterComponent extends Component{
     } else {
       return(
         <div className="row">
-          <div className="left small-12 medium-5 large-5 columns">
+          <div className="left small-8 medium-5 large-5 columns">
             <div className="train-line-form">
               <h1>Please select your commute</h1>
               <form onSubmit={this.masterButton}>
@@ -346,7 +346,7 @@ class FormMasterComponent extends Component{
           </div>
           <div className="show-for-medium-up divider small-2 columns">
           </div>
-          <div className="small-12 medium-5 large-5 columns journey-section">
+          <div className="small-8 medium-5 large-5 columns journey-section">
             <h1 id="your-commutes">Your Commutes:</h1>
             {journeys}
           </div>
