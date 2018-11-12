@@ -1,5 +1,7 @@
 class Note < ApplicationRecord
 
+  validates :body, presence: true
+
   belongs_to :journey
   belongs_to :user
 
