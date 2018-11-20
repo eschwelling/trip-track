@@ -31,17 +31,12 @@ module.exports = function(config) {
     webpack: {
       // generate sourcemaps
       devtool: 'eval-source-map',
-      externals: {
-        'cheerio': 'window',
-        'react/addons': true,
-        'react/lib/ExecutionEnvironment': true,
-        'react/lib/ReactContext': true
-      },
       module: {
         loaders: [
           // use babel-loader to transpile the test and src folders
           {
             test: /\.jsx?$/,
+            exclude: /node_modules/,
             loader: 'babel-loader'
           },
           {
