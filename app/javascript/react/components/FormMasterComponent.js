@@ -116,9 +116,9 @@ class FormMasterComponent extends Component{
         <JourneySelectionForm
           journeyFetch = {this.journeyFetch}
           />
-        <div className="divider small-2 columns">
+        <div className="divider medium-2 columns hide-for-small-only">
         </div>
-        <div className="small-5 medium-5 columns journey-section">
+        <div className="small-12 medium-5 columns journey-section">
           <h1 id="your-commutes">Your Commutes:</h1>
             {journeys}
         </div>

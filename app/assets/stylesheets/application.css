@@ -16,6 +16,10 @@
  *= require splash_page
  *= require show_page
  */
+body {
+   background-color: #018000;
+   /* display: inline-block; */
+ }
 
 .flash-notice {
   margin-top: 2rem;
@@ -109,11 +113,13 @@
 
 #nav-button {
   font-family: 'IBM Plex Sans', sans-serif;
+  color: black;
   border-left: 8rem;
 }
+
 #signout-button {
+  color: black;
   font-family: 'IBM Plex Sans', sans-serif;
-  /* margin: 0rem; */
   margin-left: 0rem;
 }
 

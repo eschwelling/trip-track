@@ -1,60 +1,58 @@
-.splash-background {
-  background-color: #018000;
-  padding: 4rem 0rem;
-  height: auto;
-}
 
-.splash-page h1{
-  text-align: center;
-  display: inline-flex;
-  margin: 2rem 0rem;
-  font-family: 'Rubik', sans-serif;
-  font-size: 10rem;
-  color: white;
-  padding: 0rem 1rem;
-}
-// #main-headline{
+
+
+// .splash-background {
+//   background-color: #018000;
+//   padding: 4rem 0rem;
+//   height: auto;
+// }
+//
+// .splash-page h1{
 //   text-align: center;
 //   display: inline-flex;
 //   margin: 2rem 0rem;
 //   font-family: 'Rubik', sans-serif;
 //   font-size: 10rem;
 //   color: white;
-//   background-color: black;
-//   border: 1rem;
-//   border-style: solid;
 //   padding: 0rem 1rem;
 // }
 
 .splash-page {
-  // margin-top: 0rem;
+  padding: 0rem 1rem;
   text-align: center;
   display: inline-flex;
-  margin: 2rem 0rem;
+  margin: 2rem 2rem;
   font-family: 'Rubik', sans-serif;
   font-size: 10rem;
   color: white;
   background-color: black;
   border: 1rem;
   border-style: solid;
-  padding: 0rem 1rem;
 }
+
 
 .buttons {
   // display: inline-block;
-  // align-items: center;
-  text-align: center;
-  background-color: #018000;
-  padding: 4rem 2rem;
-  height: auto;
-  margin-bottom: 8rem;
+  // text-align: center;
+  padding: auto;
+  // height: auto;
+  // margin-bottom: 8rem;
+  margin: 0rem 0rem;
 }
 
 .buttons li{
-  margin: 0rem 3rem;
-  align-items: center;
+  // display: inline-block;
+  border-radius: .5rem;
+  margin: 0rem 1rem;
+  // align-items: center;
+  // right: 3rem;
+}
+
+#button-font a {
   display: inline-block;
-  right: 3rem;
+  font-family: 'Rubik', sans-serif;
+  font-size: 1rem;
+  color: black;
 }
 
 .footer {
@@ -85,3 +83,7 @@
 .log-in-row {
   margin-bottom: 10rem;
 }
+
+// @media only screen and (max-width: 320px) {
+//    body { font-size: 2em; }
+// }

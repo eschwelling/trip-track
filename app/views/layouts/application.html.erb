@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bigfishtv-turret/4.0.0/turret.min.css" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bigfishtv-turret/4.0.0/turret.min.css" crossorigin="anonymous"> -->
   <link href="https://fonts.googleapis.com/css?family=Rubik:900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
 
@@ -13,36 +13,23 @@
 
   <%= csrf_meta_tags %>
 </head>
-<body>
+  <body>
 
-  <!-- <div id="home-nav-bar" class="top-bar-section">
-      <%- if current_user -%>
-        <% if current_user.profile_photo.nil? %>
-          <p><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: "button button-pill sign-out" %></p>
-        <%- else -%>
-          <p><%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: "button button-pill sign-out" %></p>
-          <p><%= image_tag "#{current_user.profile_photo}", size: "100x100" %></p>
-        <% end %>
-      <%- else -%>
-        <p><%= link_to 'Sign Up', new_user_registration_path, class: "button button-pill" %></p>
-        <p><%= link_to 'Sign In', new_user_session_path, class: "button button-pill" %></p>
+      <%= yield %>
+
+      <%= javascript_include_tag 'application' %>
+
+      <%- if Rails.env.development? || Rails.env.test? -%>
+        <%= javascript_tag do %>
+          window.railsEnv = '<%= Rails.env %>'
+        <%- end -%>
       <%- end -%>
-    </div> -->
+      <%= javascript_tag do %>
+        window.MBTAkey = "<%== ENV["MBTA_KEY"] %>"
+      <% end %>
+      <%= javascript_pack_tag 'application' %>
 
-  <%= yield %>
+      <%= yield :extra_footer %>
 
-  <%= javascript_include_tag 'application' %>
-
-  <%- if Rails.env.development? || Rails.env.test? -%>
-    <%= javascript_tag do %>
-      window.railsEnv = '<%= Rails.env %>'
-    <%- end -%>
-  <%- end -%>
-  <%= javascript_tag do %>
-    window.MBTAkey = "<%== ENV["MBTA_KEY"] %>"
-  <% end %>
-  <%= javascript_pack_tag 'application' %>
-
-  <%= yield :extra_footer %>
-</body>
+  </body>
 </html>

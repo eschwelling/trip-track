@@ -48,11 +48,11 @@ class DurationPredictionTile extends Component {
       let predictedTime = Math.floor(( new Date(destinationTime) - new Date(arrivalTime))/60000)
       return(
         <div className="prediction-tile-master">
-          <h1 id="duration-prediction-tile">{predictedTime} minutes</h1>
-          <h2>arrival time at origin: </h2>
-            <h1 id="prediction-tile-subheader">{moment(arrivalTime).utcOffset('-0500').format("hh:mm:ss A")}</h1>
-          <h2>arrival time at destination:</h2>
-            <h1  id="prediction-tile-subheader">{moment(destinationTime).utcOffset('-0500').format("hh:mm:ss A")}</h1>
+          <h1 id="prediction-tile-subheader">{predictedTime} minutes</h1>
+          <h2 id="prediction-tile-subheader">arrival time at origin: </h2>
+            <h3 id="prediction-tile-subheader">{moment(arrivalTime).utcOffset('-0500').format("hh:mm:ss A")}</h3>
+          <h2 id="prediction-tile-subheader">arrival time at destination:</h2>
+            <h3  id="prediction-tile-subheader">{moment(destinationTime).utcOffset('-0500').format("hh:mm:ss A")}</h3>
         </div>
       )
     }

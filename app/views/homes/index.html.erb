@@ -1,18 +1,21 @@
-<div class="splash-background">
-  <div class="row">
-      <div class="text-center splash-page">
-        <h1>TripTrack</h1>
-      </div>
-    </div>
 
-    <div class="row buttons text-center">
-      <li class="secondary button"><%= link_to 'Sign Up', new_user_registration_path %></li>
-      <li class="secondary button"><%= link_to 'Sign In', new_user_session_path %></li>
-    </div>
+  <div class="row">
+        <div class="small-10 medium-6 large-6 columns">
+          <h1 class="splash-page">TripTrack</h1>
+        </div>
+    <!-- </div> -->
+
+    <!-- <div class="row"> -->
+
+      <div id="button-font" class="buttons text-center small-12 columns">
+        <li class="secondary button"><%= link_to 'Sign Up', new_user_registration_path %></li>
+        <li class="secondary button"><%= link_to 'Sign In', new_user_session_path %></li>
+      </div>
+
+  </div>
+
 
     <div class="footer">
       <img class="mbta-img" src="/MassDOT_Logos.jpg"/>
       <h3>powered by</h3>
     </div>
-
-</div>
