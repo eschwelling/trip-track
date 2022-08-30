@@ -11,7 +11,7 @@
     "dotenv": "^6.1.0",
     "halogen": "^0.2.0",
     "moment": "^2.22.2",
-    "moment-timezone": "^0.5.23",
+    "moment-timezone": "^0.5.35",
     "prop-types": "~15.6.0",
     "react": "~15.4.2",
     "react-dom": "~15.4.2",
