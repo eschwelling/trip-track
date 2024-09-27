@@ -3,14 +3,14 @@
   margin-top: 6rem;
 }
 
-.commute-chooser {
-  margin-top: 1rem;
-}
-
 .train-line-form h1 {
   font-family: 'Rubik', sans-serif;
-  text-align: left;
-  margin-top: 6rem;
+  text-align: center;
+  margin: 0rem 0rem 2rem 0rem;
+}
+
+.commute-chooser {
+  margin-top: 1rem;
 }
 
 .left{
@@ -29,20 +29,20 @@
 }
 
 .commute-form {
-  margin: 4rem 10rem 0rem 10rem;
+  // margin: 4rem 10rem 0rem 10rem;
   background-color: white;
 }
 
-.journeyTile h3 {
-  font-family: 'Rubik', sans-serif;
-  color: green;
-  font-size: 1rem;
-}
-.journeyTile h1 {
-  font-family: 'Rubik', sans-serif;
-  color: black;
-  font-size: 1rem;
-}
+// .journeyTile h3 {
+//   font-family: 'Rubik', sans-serif;
+//   color: green;
+//   font-size: 1rem;
+// }
+// .journeyTile h1 {
+//   font-family: 'Rubik', sans-serif;
+//   color: black;
+//   font-size: 1rem;
+// }
 
 .field-name {
   font-family: 'Rubik', sans-serif;
@@ -85,7 +85,7 @@
 }
 
 #journey-show-route{
-  padding-top: 8rem;
+  padding-top: 6rem;
   font-family: 'IBM Plex Sans', sans-serif;
 }
 
@@ -104,6 +104,7 @@ span {
     width: 100%;
     z-index: 9999;
     height: 5rem;
+    overflow:scroll;
 }
 
 .top-bar-section{
@@ -120,6 +121,7 @@ span {
   display: inline-flex;
   margin: 1rem 1rem 1rem 1rem;
   float: left;
+  border-radius: 1rem;
 }
 
 #back-button{
@@ -216,7 +218,8 @@ span {
 }
 
 
-.commute-tile h2{
+.commute-tile h3{
+  color: white;
   padding: 0rem;
   margin: 0rem;
   text-align: left;
@@ -227,6 +230,7 @@ span {
 }
 
 .commute-tile h5{
+  color: white;
   text-align: left;
   margin: 0rem;
   font-size: 1rem;
@@ -247,10 +251,21 @@ span {
 }
 
 #prediction-tile-subheader{
+  color: white;
   margin: auto;
   padding: .5rem 0rem;
+  font-family: 'IBM Plex Sans', sans-serif;
   font-size: 4rem;
   font-weight: 400;
+}
+
+h2#prediction-tile-subheader {
+  font-size: 1.5rem;
+}
+
+h3#prediction-tile-subheader {
+  font-size: 3rem;
+  font-weight: bold;
 }
 
 .master-form-button  {
@@ -315,4 +330,8 @@ span {
 
 .thumbnail {
   max-width: 100%;
+}
+
+#input-text {
+  margin: 2rem 6rem 0rem 6rem;
 }

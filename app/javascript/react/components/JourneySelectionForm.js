@@ -188,14 +188,14 @@ class JourneySelectionForm extends Component{
     let button;
 
     if (loading) {
-        button = <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit} disabled/>
+        button = <input className="success button" id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit} disabled/>
     } else {
-      button = <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit}/>
+      button = <input className="success button" id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit}/>
     }
 
       return(
         <div className="">
-        <div className="left small-5 medium-5 columns">
+        <div className="small-12 medium-5 columns">
           <div className="train-line-form">
               <h1>Please select your commute</h1>
                 <form onSubmit={this.handleSubmit}>
