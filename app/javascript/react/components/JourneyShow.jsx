@@ -43,16 +43,15 @@ class JourneyShow extends Component {
 
   render() {
       return(
-        <div>
-          <div className="row">
-            <div id="journey-show-route" className="small-12 medium-6 large-6 columns">
-              <h1>line: <span className="prediction-text">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
-              <h1>origin: <span className="prediction-text">{this.state.origin.name}</span></h1>
-              <h1>destination: <span className="prediction-text">{this.state.destination.name}</span></h1>
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:py-10">
+          <div className="flex flex-col gap-8 md:flex-row">
+            <div id="journey-show-route" className="md:w-1/2">
+              <h1 className="text-xl sm:text-2xl">line: <span className="font-display text-mbta">{this.state.line.name}  - {this.state.line.short_name}</span></h1>
+              <h1 className="mt-3 text-xl sm:text-2xl">origin: <span className="font-display text-mbta">{this.state.origin.name}</span></h1>
+              <h1 className="mt-3 text-xl sm:text-2xl">destination: <span className="font-display text-mbta">{this.state.destination.name}</span></h1>
             </div>
 
-            <div className="small-12 medium-6 large-6 columns">
-              <div className="predictions-show-master">
+            <div className="md:w-1/2">
                   {
                     this.state.presenceOfId &&
                     <DurationPrediction
@@ -65,29 +64,24 @@ class JourneyShow extends Component {
                       destinationArrivalTimes = {this.state.destinationArrivalPredictions}
                       />
                   }
-              </div>
-          </div>
-        </div>
-
-
-          <div>
-            <div className="row">
-              <JourneyChart
-                id={this.props.id}
-                direction={this.state.direction}
-                line={this.state.line.mbta_id}
-                destination={this.state.destination.mbta_id}
-                origin={this.state.origin.mbta_id}
-                />
             </div>
           </div>
-            <div className="row">
-              <div className="small-10 medium-12 large-12 columns notes">
-                <NoteContainer
-                  id={this.props.id}
-                  />
-              </div>
-            </div>
+
+          <div className="mt-8">
+            <JourneyChart
+              id={this.props.id}
+              direction={this.state.direction}
+              line={this.state.line.mbta_id}
+              destination={this.state.destination.mbta_id}
+              origin={this.state.origin.mbta_id}
+              />
+          </div>
+
+          <div className="mt-8">
+            <NoteContainer
+              id={this.props.id}
+              />
+          </div>
         </div>
       )
     }

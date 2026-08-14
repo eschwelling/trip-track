@@ -66,8 +66,8 @@ class JourneyChart extends Component {
     render(){
       if (this.state.scheduleData !== null) {
         return (
-          <div>
-            <div className="small-6 columns">
+          <div className="flex flex-col gap-6 lg:flex-row">
+            <div className="lg:w-1/2">
               <Chart
               chartType="ScatterChart"
               data={[["Time", "Duration"], ...this.state.data]}
@@ -86,7 +86,7 @@ class JourneyChart extends Component {
               height={"400px"}
               />
             </div>
-            <div className="small-6 columns">
+            <div className="lg:w-1/2">
               <Chart
                 chartType="ScatterChart"
                 data={[["Scheduled Time", "Scheduled Duration"], ...this.state.scheduleData]}
@@ -109,8 +109,8 @@ class JourneyChart extends Component {
         );
       }
       return(
-          <div className="chart-button small-4 medium-8 large-6 columns">
-            <input onClick={this.fetchScheduleData} value="Get Charts" type="submit"/>
+          <div className="text-center">
+            <input className="btn w-full sm:w-auto sm:px-8" onClick={this.fetchScheduleData} value="Get Charts" type="submit"/>
           </div>
       )
     }

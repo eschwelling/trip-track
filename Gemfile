@@ -8,8 +8,8 @@ gem 'rails', '~> 7.1.3'
 gem 'pg', '~> 1.5'
 # Use Puma as the app server
 gem 'puma', '~> 6.4'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 6.0'
+# Asset pipeline (serves app/assets images; all CSS/JS goes through Vite)
+gem 'sprockets-rails'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
@@ -46,7 +46,6 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'pry-rails'
-gem 'jquery-rails'
 gem 'rspec-rails', group: [:development, :test]
 gem 'capybara', group: [:development, :test]
 gem 'launchy', group: [:development, :test]
@@ -55,10 +54,6 @@ gem 'database_cleaner-active_record', group: [:development, :test]
 gem 'valid_attribute', group: [:development, :test]
 gem 'shoulda-matchers', '~> 6.0', group: [:development, :test], require: false
 gem 'devise', '~> 4.9'
-# Pinned to the Foundation 5 series (matches the original app) since Foundation 6
-# restructured the Sass API and grid system; upgrading app/assets/stylesheets/
-# foundation_and_overrides.scss to Foundation 6 is a separate, purely-visual project.
-gem 'foundation-rails', '~> 5.0'
 gem 'httparty'
 gem 'carrierwave', '~> 3.0'
 # Backs CarrierWave's S3 storage. Replaces the unmaintained multi-provider

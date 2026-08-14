@@ -6,7 +6,7 @@ const BackButton = () => {
 
   return(
     <div id="back-button">
-        <button className="button button-pill" onClick={() => navigate(-1)}>Back</button>
+        <button className="btn" onClick={() => navigate(-1)}>Back</button>
     </div>
   )
 }

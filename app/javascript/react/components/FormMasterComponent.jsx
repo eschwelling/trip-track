@@ -111,17 +111,19 @@ class FormMasterComponent extends Component{
       )
     })
       return(
-        <div className="row">
-        <JourneySelectionForm
-          journeyFetch = {this.journeyFetch}
-          />
-        <div className="divider small-2 columns">
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-6 md:flex-row md:gap-0 md:py-10">
+          <div className="md:w-1/2 md:pr-8">
+            <JourneySelectionForm
+              journeyFetch = {this.journeyFetch}
+              />
+          </div>
+          <div className="md:w-1/2 md:border-l md:border-black md:pl-8">
+            <h1 id="your-commutes" className="mb-4 font-display text-2xl font-black sm:text-3xl">Your Commutes:</h1>
+            <div className="flex flex-col gap-4">
+              {journeys}
+            </div>
+          </div>
         </div>
-        <div className="small-5 medium-5 columns journey-section">
-          <h1 id="your-commutes">Your Commutes:</h1>
-            {journeys}
-        </div>
-    </div>
       )
     }
   }

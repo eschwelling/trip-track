@@ -192,44 +192,40 @@ class JourneySelectionForm extends Component{
     let button;
 
     if (loading) {
-        button = <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit} disabled/>
+        button = <input id="input-text" className="btn mt-6 w-full disabled:opacity-50 sm:w-auto sm:px-8" value="Choose Your Commute!" type="submit" disabled/>
     } else {
-      button = <input id="input-text" value="Choose Your Commute!" type="submit" onSubmit={this.handleSubmit}/>
+      button = <input id="input-text" className="btn mt-6 w-full sm:w-auto sm:px-8" value="Choose Your Commute!" type="submit"/>
     }
 
       return(
-        <div className="">
-        <div className="left small-5 medium-5 columns">
-          <div className="train-line-form">
-              <h1>Please select your commute</h1>
-                <form onSubmit={this.handleSubmit}>
-                  <LineForm
-                    lines={this.state.allLines}
-                    value={this.state.line_id}
-                    handlePayload={this.chooseLine}
-                    />
-                  <DirectionSelector
-                    handlePayload={this.chooseDirection}
-                    />
-                  <OriginForm
-                    label="origin"
-                    handlePayload={this.chooseOrigin}
-                    handleFormChange={this.chooseFormOrigin}
-                    stops={this.state.originStops}
-                    value={this.state.origin}
-                    />
-                  <DestinationForm
-                    label="destination"
-                    handlePayload={this.chooseDestination}
-                    handleFormChange={this.chooseFormDestination}
-                    stops={this.state.originStops}
-                    value={this.state.destination}
-                    />
-                  {button}
-              </form>
-          </div>
+        <div>
+          <h1 className="mb-4 font-display text-2xl font-black sm:text-3xl">Please select your commute</h1>
+          <form className="flex flex-col gap-4" onSubmit={this.handleSubmit}>
+            <LineForm
+              lines={this.state.allLines}
+              value={this.state.line_id}
+              handlePayload={this.chooseLine}
+              />
+            <DirectionSelector
+              handlePayload={this.chooseDirection}
+              />
+            <OriginForm
+              label="origin"
+              handlePayload={this.chooseOrigin}
+              handleFormChange={this.chooseFormOrigin}
+              stops={this.state.originStops}
+              value={this.state.origin}
+              />
+            <DestinationForm
+              label="destination"
+              handlePayload={this.chooseDestination}
+              handleFormChange={this.chooseFormDestination}
+              stops={this.state.originStops}
+              value={this.state.destination}
+              />
+            {button}
+          </form>
         </div>
-      </div>
       )
     }
   }

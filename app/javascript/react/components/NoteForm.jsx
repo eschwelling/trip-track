@@ -18,46 +18,39 @@ function NoteForm(props) {
 
   return (
     <div>
-      <hr/>
-      <h3 className="trip-notes">Trip Notes</h3>
-      <hr/>
-      <label className="form-label">
-        <div className="row">
-          <form className="text-center" onSubmit={props.handleSubmit} >
-            <div className="columns small-8">
-              <textarea
-                rows="6"
-                cols="5"
-                name="note"
-                type='text'
-                value={props.content}
-                onChange={props.handleChange}
-              />
-            </div>
+      <h3 className="border-y border-gray-300 py-3 text-center font-display text-xl">Trip Notes</h3>
+      <form className="mt-4 flex flex-col gap-4 sm:flex-row" onSubmit={props.handleSubmit} >
+        <textarea
+          rows="6"
+          name="note"
+          className="field-input sm:flex-1"
+          placeholder="How was the trip?"
+          value={props.content}
+          onChange={props.handleChange}
+        />
 
-                <div className="drop small-2 columns" {...getRootProps()}>
-                   <input {...getInputProps()} />
-                   <p>Try dropping some files here, or click to select files to upload.</p>
-                 </div>
+        <div className="flex flex-col gap-3 sm:w-64">
+          <div className="cursor-pointer rounded border-2 border-dashed border-gray-400 p-4 text-center text-sm text-gray-600 hover:border-mbta" {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>Try dropping some files here, or click to select files to upload.</p>
+          </div>
 
-                 <div className="small-2 columns">
-                 <aside>
-                   <h5>Dropped files</h5>
-                   <ul>
-                     {
-                       files.map(f => <p className="dropped-files" key={f.name}>{f.name} - {f.size} bytes</p>)
-                     }
-                   </ul>
-                 </aside>
-               <button className="secondary button button-s" type="submit" value="Submit">Submit</button>
-             </div>
+          {files.length > 0 &&
+            <aside>
+              <h5 className="text-sm font-bold">Dropped files</h5>
+              <ul>
+                {
+                  files.map(f => <p className="text-xs text-gray-600" key={f.name}>{f.name} - {f.size} bytes</p>)
+                }
+              </ul>
+            </aside>
+          }
+          {message && <p className="text-sm text-red-600">{message}</p>}
 
-          </form>
-          <div className="row"></div>
-          <hr/>
+          <button className="btn" type="submit" value="Submit">Submit</button>
         </div>
-      </label>
-  </div>
+      </form>
+    </div>
   )
 }
 

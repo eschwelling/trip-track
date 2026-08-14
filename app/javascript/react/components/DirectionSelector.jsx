@@ -14,12 +14,13 @@ class DirectionSelector extends Component {
 
   render(){
     return(
-      <label className="select select-s" htmlFor="select-s">
-      <select id="select-s" name="directionMenu" onChange={this.handleFormChange}>
-        <option value='0'>Inbound</option>
-        <option value='1'>Outbound</option>
-      </select>
-    </label>
+      <label className="block">
+        <span className="mb-1 block font-display text-sm">direction</span>
+        <select className="field-input" name="directionMenu" onChange={this.handleFormChange}>
+          <option value='0'>Inbound</option>
+          <option value='1'>Outbound</option>
+        </select>
+      </label>
     )
   }
 }

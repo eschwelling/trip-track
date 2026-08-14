@@ -18,8 +18,9 @@ class LineForm extends Component{
     })
 
     return(
-            <label className="select select-s" htmlFor="select-s">
-              <select id="select-s" name="line" value={this.props.value} onChange={this.handleChange}>
+            <label className="block">
+              <span className="mb-1 block font-display text-sm">line</span>
+              <select className="field-input" name="line" value={this.props.value} onChange={this.handleChange}>
                 {lines}
               </select>
             </label>
