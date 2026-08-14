@@ -1,6 +1,6 @@
 import React from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import FormMasterComponent from '../../app/javascript/react/components/FormMasterComponent'
 
@@ -36,13 +36,22 @@ const mbtaStopsData = {
   ],
 }
 
+const localStopsData = [
+  { id: 1330, mbta_id: 10015, name: 'Harrison Ave @ E Newton St' },
+  { id: 7302, mbta_id: 25, name: 'E Broadway @ L St' },
+]
+
 function jsonResponse(body) {
   return Promise.resolve({ ok: true, json: () => Promise.resolve(body) })
 }
 
-function mockFetch(url) {
+function mockFetch(url, options = {}) {
   if (url.startsWith('/api/v1/mbta/stops')) return jsonResponse(mbtaStopsData)
-  if (url.startsWith('/api/v1/journeys')) return jsonResponse(journeysData)
+  if (url.startsWith('/api/v1/stops')) return jsonResponse(localStopsData)
+  if (url.startsWith('/api/v1/journeys')) {
+    if (options.method === 'POST') return jsonResponse({ journey: {} })
+    return jsonResponse(journeysData)
+  }
   if (url.startsWith('/api/v1/lines')) return jsonResponse(linesData)
   if (url.startsWith('/api/v1/users')) return jsonResponse(userData)
   return Promise.reject(new Error(`Unhandled fetch in test: ${url}`))
@@ -88,5 +97,27 @@ describe('FormMasterComponent', () => {
     expect(originOptions).toHaveLength(2) // once in the origin select, once in destination
     // Rapid Transit lines are filtered out of the line dropdown
     expect(screen.queryByRole('option', { name: /Red Line/ })).not.toBeInTheDocument()
+  })
+
+  it('submits the default selections when the form is untouched', async () => {
+    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+
+    await screen.findAllByRole('option', { name: 'Harrison Ave @ E Newton St' })
+    // Wait for the default stops to resolve against the local database
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/v1/stops')
+    })
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    fireEvent.click(screen.getByDisplayValue('Choose Your Commute!'))
+
+    await waitFor(() => {
+      const post = global.fetch.mock.calls.find(([url, opts]) => url === '/api/v1/journeys' && opts && opts.method === 'POST')
+      expect(post).toBeTruthy()
+      const body = JSON.parse(post[1].body)
+      expect(body.origin).toBe(1330)
+      expect(body.destination).toBe(1330)
+      expect(body.line).toBe(36)
+    })
   })
 })

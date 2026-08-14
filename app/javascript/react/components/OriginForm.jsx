@@ -5,16 +5,10 @@ class OriginForm extends Component {
   constructor(props){
     super(props)
 
-    this.handleChange = this.handleChange.bind(this)
     this.handleFormChange = this.handleFormChange.bind(this)
   }
 
-  handleChange(event) {
-    this.props.handlePayload(event.target.value)
-  }
-
   handleFormChange(event) {
-
     this.props.handleFormChange(event.target.value)
   }
 
@@ -28,7 +22,7 @@ class OriginForm extends Component {
       return (
             <label className="block">
               <span className="mb-1 block font-display text-sm">{this.props.label}</span>
-              <select className="field-input" name="originStops" onChange={this.handleFormChange}>
+              <select className="field-input" name="originStops" value={this.props.value} onChange={this.handleFormChange}>
                 {stopOptions}
               </select>
             </label>

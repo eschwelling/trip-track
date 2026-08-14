@@ -22,7 +22,7 @@ class DestinationForm extends Component {
       return (
             <label className="block">
               <span className="mb-1 block font-display text-sm">{this.props.label}</span>
-              <select className="field-input" name="destinationStops" onChange={this.handleFormChange}>
+              <select className="field-input" name="destinationStops" value={this.props.value} onChange={this.handleFormChange}>
                 {stopOptions}
               </select>
             </label>

@@ -88,6 +88,35 @@ class JourneySelectionForm extends Component{
     .then(response => response.json())
     .then(body => {
       this.setState({ originStops: body.data })
+      if (body.data.length > 0) {
+        // A select's default option never fires onChange, so commit the
+        // first stop to state as the default origin and destination.
+        let firstStopId = body.data[0].id
+        this.setState({ formOrigin: firstStopId, formDestination: firstStopId })
+        this.lookupLocalStop(firstStopId, 'origin')
+        this.lookupLocalStop(firstStopId, 'destination')
+      } else {
+        this.setState({ formOrigin: "", formDestination: "", origin: "", destination: "" })
+      }
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
+  }
+
+  lookupLocalStop(mbtaStopId, stateKey) {
+    fetch('/api/v1/stops')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+      let match = body.find(stop => stop.mbta_id == mbtaStopId)
+      this.setState({ [stateKey]: match || "", loading: false })
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
@@ -105,52 +134,23 @@ class JourneySelectionForm extends Component{
 
   chooseFormOrigin(originFormPayload) {
     this.setState({ formOrigin: originFormPayload, loading: true})
-    fetch('/api/v1/stops')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-          body.forEach(stop => {
-          if (stop.mbta_id == originFormPayload)
-          this.setState({ origin: stop, loading: false })
-        })
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+    this.lookupLocalStop(originFormPayload, 'origin')
   }
 
   chooseFormDestination(destinationFormPayload) {
     this.setState({ formDestination: destinationFormPayload, loading: true})
-    fetch('/api/v1/stops')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-        if (destinationFormPayload.includes('place'))
-        swal("Data for this stop is not available right now. Sorry! Please choose the next closest stop.")
-
-        body.forEach(stop => {
-          if (stop.mbta_id == destinationFormPayload)
-          this.setState({ destination: stop, loading: false })
-      })
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+    if (destinationFormPayload.includes('place')) {
+      swal("Data for this stop is not available right now. Sorry! Please choose the next closest stop.")
+    }
+    this.lookupLocalStop(destinationFormPayload, 'destination')
   }
 
   handleSubmit(event) {
+    event.preventDefault();
+    if (!this.state.line.id || !this.state.origin.id || !this.state.destination.id) {
+      swal("Hang on!", "Please choose a line, origin, and destination first.", "info");
+      return;
+    }
     let journey = {
       line: this.state.line.id,
       origin: this.state.origin.id,
@@ -184,7 +184,6 @@ class JourneySelectionForm extends Component{
       console.error(`Error in fetch: ${error.message}`);
       swal("Save error. Please try again.");
     });
-    event.preventDefault();
   }
 
   render() {
@@ -211,17 +210,15 @@ class JourneySelectionForm extends Component{
               />
             <OriginForm
               label="origin"
-              handlePayload={this.chooseOrigin}
               handleFormChange={this.chooseFormOrigin}
               stops={this.state.originStops}
-              value={this.state.origin}
+              value={this.state.formOrigin}
               />
             <DestinationForm
               label="destination"
-              handlePayload={this.chooseDestination}
               handleFormChange={this.chooseFormDestination}
               stops={this.state.originStops}
-              value={this.state.destination}
+              value={this.state.formDestination}
               />
             {button}
           </form>

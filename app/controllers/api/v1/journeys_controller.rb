@@ -16,9 +16,9 @@ class Api::V1::JourneysController < ApplicationController
   end
 
   def create
-    @origin = Stop.find(params[:origin])
-    @destination = Stop.find(params[:destination])
-    @line = Line.find(params[:line])
+    @origin = Stop.find(params.require(:origin))
+    @destination = Stop.find(params.require(:destination))
+    @line = Line.find(params.require(:line))
 
     @journey = Journey.new(journey_params_id)
     @journey.origin = @origin
@@ -31,6 +31,9 @@ class Api::V1::JourneysController < ApplicationController
       render json: {errors: @journey.errors.full_messages}
     end
 
+  rescue ActionController::ParameterMissing, ActiveRecord::RecordNotFound => e
+    render json: { errors: ["line, origin, and destination are required: #{e.message}"] },
+           status: :unprocessable_entity
   end
 
   def destroy
