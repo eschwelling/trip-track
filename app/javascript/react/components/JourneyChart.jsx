@@ -25,12 +25,10 @@ class JourneyChart extends Component {
       .then(response => response.json())
       .then(body => {
         let mappedData = body.trips.map(trip => {
-          let tripData = []
           let arrival = parseInt(trip.arrival.slice(11).slice(0, -9))
-          tripData.push([ arrival, trip.total_trip_time ])
-          let newData = this.state.data.concat(tripData)
-          this.setState({ data: newData })
+          return [ arrival, trip.total_trip_time ]
         })
+        this.setState({ data: mappedData })
       })
     }
 

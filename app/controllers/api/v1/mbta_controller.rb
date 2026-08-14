@@ -21,9 +21,13 @@ class Api::V1::MbtaController < ApplicationController
 
   def proxy_mbta_request(path, filter:)
     query = filter.transform_keys { |key| "filter[#{key}]" }
-    query["api_key"] = ENV["MBTA_KEY"]
+    # Without a key MBTA still answers, just at a lower shared rate limit
+    query["api_key"] = ENV["MBTA_KEY"] if ENV["MBTA_KEY"].present?
 
-    response = HTTParty.get("#{MBTA_BASE_URL}#{path}", query: query)
+    response = HTTParty.get("#{MBTA_BASE_URL}#{path}", query: query, timeout: 10)
     render json: response.body, status: response.code
+  rescue Timeout::Error, HTTParty::Error, SocketError, SystemCallError => e
+    render json: { errors: [{ status: "502", title: "MBTA API unavailable", detail: e.message }] },
+           status: :bad_gateway
   end
 end

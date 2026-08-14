@@ -48,7 +48,7 @@ class JourneySelectionForm extends Component{
   }
 
   fetchStopsLineDirectionId(direction_id, line_id) {
-    fetch(`/api/v1/mbta/stops?direction_id=${this.state.direction_id}&route=${this.state.line_id}`)
+    fetch(`/api/v1/mbta/stops?direction_id=${direction_id}&route=${line_id}`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -66,7 +66,6 @@ class JourneySelectionForm extends Component{
   }
 
   chooseLine(linePayload) {
-    event.preventDefault();
     this.setState({ line_id: linePayload})
     fetch('/api/v1/lines')
     .then(response => {
@@ -80,24 +79,22 @@ class JourneySelectionForm extends Component{
     })
     .then(response => response.json())
     .then(body => {
-        body.forEach(line => {
-        if (line.mbta_id == linePayload)
-        this.setState({ line: line })
-        this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
+      body.forEach(line => {
+        if (line.mbta_id == linePayload) {
+          this.setState({ line: line })
+        }
       })
+      this.fetchStopsLineDirectionId(this.state.direction_id, linePayload)
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
-    this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
   }
 
   chooseDirection(directionPayload) {
-    event.preventDefault();
     this.setState({ direction_id: directionPayload})
-    this.fetchStopsLineDirectionId(this.state.direction_id, this.state.line)
+    this.fetchStopsLineDirectionId(directionPayload, this.state.line_id)
   }
 
   chooseFormOrigin(originFormPayload) {
-    event.preventDefault();
     this.setState({ formOrigin: originFormPayload, loading: true})
     fetch('/api/v1/stops')
     .then(response => {
@@ -120,7 +117,6 @@ class JourneySelectionForm extends Component{
   }
 
   chooseFormDestination(destinationFormPayload) {
-    event.preventDefault();
     this.setState({ formDestination: destinationFormPayload, loading: true})
     fetch('/api/v1/stops')
     .then(response => {
@@ -175,8 +171,10 @@ class JourneySelectionForm extends Component{
       this.props.journeyFetch();
       swal("Your commute has been saved!");
     })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
-    swal("Save error. Please try again.");
+    .catch(error => {
+      console.error(`Error in fetch: ${error.message}`);
+      swal("Save error. Please try again.");
+    });
     event.preventDefault();
   }
 

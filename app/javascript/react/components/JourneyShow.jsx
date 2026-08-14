@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { useParams } from 'react-router-dom'
-import OriginPrediction from './OriginPrediction'
-import DestinationPrediction from './DestinationPrediction'
 import DurationPrediction from './DurationPrediction'
 import NoteContainer from './NoteContainer'
 import JourneyChart from './JourneyChart'
