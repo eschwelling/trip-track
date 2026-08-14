@@ -80,6 +80,4 @@ test:
 #
 production:
   <<: *default
-  database: trip-track_production
-  username: trip-track
-  password: <%= ENV['TRIP-TRACK_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>

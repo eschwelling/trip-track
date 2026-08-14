@@ -44,6 +44,16 @@ React component tests run with Vitest and React Testing Library:
 
 Both suites run in CI on every push and pull request (see `.github/workflows/ci.yml`).
 
+### Deploying to Render
+
+The repo includes a [Render Blueprint](https://render.com/docs/blueprint-spec) (`render.yaml`) that provisions the web service and a Postgres database:
+
+1. In the Render dashboard: **New → Blueprint**, select this repo and branch. Render reads `render.yaml` and creates both resources.
+2. Set the `MBTA_KEY` environment variable on the web service (marked `sync: false`, so the dashboard prompts for it). The app works without it at MBTA's shared rate limit.
+3. After the first deploy, seed lines and stops from the MBTA API via the service's **Shell** tab: `bin/rails db:seed`
+
+Free-tier notes: the web service spins down after 15 minutes of idle (first request after that takes ~30-60s), and free Postgres databases expire 30 days after creation unless upgraded. Note photos upload to local disk unless AWS S3 credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `S3_BUCKET_PRODUCTION`) are configured — local uploads are lost on redeploy.
+
 ### Frameworks, libraries and gems
 
 * [Rails](https://rubyonrails.org/) 7.1 - Backend framework
