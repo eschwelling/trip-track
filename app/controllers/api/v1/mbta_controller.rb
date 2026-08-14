@@ -5,7 +5,13 @@ class Api::V1::MbtaController < ApplicationController
   # being exposed to every client (it used to be injected into the page as
   # window.MBTAkey, and several endpoints were being called with no key at all).
 
+  # Stops and schedules are timetable data that changes on rating boundaries,
+  # not minute to minute, so they can sit in the browser cache. Predictions are
+  # realtime and deliberately left uncached.
+  CACHEABLE_FOR = 10.minutes
+
   def stops
+    expires_in CACHEABLE_FOR, public: false
     proxy_mbta_request("/stops", filter: params.permit(:direction_id, :route).to_h)
   end
 
@@ -14,6 +20,7 @@ class Api::V1::MbtaController < ApplicationController
   end
 
   def schedules
+    expires_in CACHEABLE_FOR, public: false
     proxy_mbta_request("/schedules", filter: params.permit(:route, :stop).to_h)
   end
 

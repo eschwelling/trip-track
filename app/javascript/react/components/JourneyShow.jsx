@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import DurationPrediction from './DurationPrediction'
 import NoteContainer from './NoteContainer'
 import JourneyChart from './JourneyChart'
+import fetchJson from '../utils/fetchJson'
 
 
 
@@ -22,23 +23,14 @@ class JourneyShow extends Component {
   }
 
   componentDidMount() {
-    fetch(`/api/v1/journeys/${this.props.id}`)
-      .then(response => {
-        if (response.ok) {
-          return response;
-        } else {
-          let errorMessage = `${response.status} (${response.statusText})`,
-          error = new Error(errorMessage);
-          throw(error);
-        }
-      })
-      .then(response => response.json())
+    fetchJson(`/api/v1/journeys/${this.props.id}`)
       .then(body => {
         let origin = body.journey.origin
         let destination = body.journey.destination
         let presenceOfId = Object.keys(origin).length > 0 || Object.keys(destination).length > 0
         this.setState({ origin, destination, line: body.journey.line, direction: body.journey.direction_id, presenceOfId })
       })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
     }
 
   render() {

@@ -3,6 +3,7 @@ import swal from 'sweetalert';
 
 import JourneyTile from './JourneyTile'
 import JourneySelectionForm from './JourneySelectionForm'
+import fetchJson from '../utils/fetchJson'
 
 class FormMasterComponent extends Component{
   constructor(props){
@@ -29,17 +30,7 @@ class FormMasterComponent extends Component{
   }
 
   journeyFetch() {
-    fetch(`/api/v1/journeys`)
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
+    fetchJson('/api/v1/journeys')
     .then(body => {
       this.setState({ journeys: body.journeys })
     })
@@ -61,30 +52,17 @@ class FormMasterComponent extends Component{
             text: "Done and done!",
             icon: "success"
           });
-        fetch(`/api/v1/journeys/${id}`, {
+        fetchJson(`/api/v1/journeys/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json' },
-          credentials: 'same-origin'
+            'Content-Type': 'application/json' }
         })
-        .then(response => response.json())
-        .then(body => {
-          if(body.error) {
-            throw body.error
-          } else {
-            let newJourneys = this.state.journeys.filter(journey => {
-              return(
-                journey.id !== id
-              )
-            })
-            this.setState({journeys: newJourneys})
-          }
+        .then(() => {
+          let newJourneys = this.state.journeys.filter(journey => journey.id !== id)
+          this.setState({journeys: newJourneys})
         })
-        .catch(error => {
-          this.setState({error: error})
-          console.log("ERROR in FETCH")
-        })
+        .catch(error => console.error(`Error in fetch: ${error.message}`))
       } else {
         swal("Good call. Have a great trip!");
       }

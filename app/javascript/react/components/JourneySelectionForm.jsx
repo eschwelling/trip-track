@@ -1,230 +1,210 @@
 import React, { Component } from 'react'
-import swal from 'sweetalert';
+import swal from 'sweetalert'
 
-import LineForm from './LineForm'
-import OriginForm from './OriginForm'
-import DestinationForm from './DestinationForm'
-import DirectionSelector from './DirectionSelector'
+import SelectField from './SelectField'
+import fetchJson from '../utils/fetchJson'
 
-class JourneySelectionForm extends Component{
-  constructor(props){
+const DIRECTIONS = [
+  { id: '0', label: 'Inbound' },
+  { id: '1', label: 'Outbound' },
+]
+
+class JourneySelectionForm extends Component {
+  constructor(props) {
     super(props)
     this.state = {
-      line_id: "",
-      line: {},
-      allLines: [],
-      origin: "",
-      formOrigin: "",
-      destination: "",
-      formDestination: "",
-      originStops: [],
-      direction_id: 0,
-      loading: false,
-      user: {}
+      lines: [],
+      lineId: '',
+      directionId: '0',
+      // Each entry is { mbtaId, name, localId } - the MBTA stop paired with the
+      // local Stop record it maps to, resolved once when the route loads.
+      stops: [],
+      originMbtaId: '',
+      destinationMbtaId: '',
+      loadingStops: false,
+      saving: false,
     }
+
+    // Selections can change faster than the stop requests resolve; only the
+    // newest request is allowed to write to state.
+    this.latestStopsRequest = 0
+
     this.chooseLine = this.chooseLine.bind(this)
-    this.chooseFormOrigin = this.chooseFormOrigin.bind(this)
-    this.chooseFormDestination = this.chooseFormDestination.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
     this.chooseDirection = this.chooseDirection.bind(this)
-    this.fetchStopsLineDirectionId = this.fetchStopsLineDirectionId.bind(this)
+    this.chooseOrigin = this.chooseOrigin.bind(this)
+    this.chooseDestination = this.chooseDestination.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
-  componentDidMount(){
-    fetch('/api/v1/users')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-        this.setState({ user: body })
+  componentDidMount() {
+    // bus_only lets the server drop the routes this picker never shows.
+    fetchJson('/api/v1/lines?bus_only=true')
+      .then((lines) => {
+        this.setState({ lines })
+        if (lines.length > 0) {
+          this.setState({ lineId: lines[0].mbta_id })
+          this.loadStops(this.state.directionId, lines[0].mbta_id)
+        }
       })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
-
-    fetch('/api/v1/lines')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      let busLines = body.filter(line => (
-        line.description !== "Rapid Transit" &&
-        line.description !== "Commuter Rail" &&
-        line.description !== "Limited Service" &&
-        line.description !== "Ferry"
-      ))
-      this.setState({ allLines: busLines })
-      if (busLines.length > 0) {
-        this.setState({ line_id: busLines[0].mbta_id, line: busLines[0] })
-        this.fetchStopsLineDirectionId(this.state.direction_id, busLines[0].mbta_id)
-      }
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+      .catch((error) => console.error(`Error in fetch: ${error.message}`))
   }
 
-  fetchStopsLineDirectionId(direction_id, line_id) {
-    fetch(`/api/v1/mbta/stops?direction_id=${direction_id}&route=${line_id}`)
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      this.setState({ originStops: body.data })
-      if (body.data.length > 0) {
-        // A select's default option never fires onChange, so commit the
-        // first stop to state as the default origin and destination.
-        let firstStopId = body.data[0].id
-        this.setState({ formOrigin: firstStopId, formDestination: firstStopId })
-        this.lookupLocalStop(firstStopId, 'origin')
-        this.lookupLocalStop(firstStopId, 'destination')
-      } else {
-        this.setState({ formOrigin: "", formDestination: "", origin: "", destination: "" })
-      }
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+  loadStops(directionId, lineId) {
+    const requestId = (this.latestStopsRequest += 1)
+    this.setState({ loadingStops: true })
+
+    fetchJson(`/api/v1/mbta/stops?direction_id=${directionId}&route=${lineId}`)
+      .then((body) => {
+        const mbtaStops = body.data || []
+        if (mbtaStops.length === 0) return []
+
+        // One request resolves every stop on the route. This replaced a
+        // download of the entire stops table per dropdown interaction.
+        const ids = mbtaStops.map((stop) => stop.id)
+        return fetchJson(`/api/v1/stops?mbta_ids=${encodeURIComponent(ids.join(','))}`).then((localStops) => {
+          const localIdByMbtaId = new Map(localStops.map((stop) => [String(stop.mbta_id), stop.id]))
+          return mbtaStops.map((stop) => ({
+            mbtaId: stop.id,
+            name: stop.attributes.name,
+            localId: localIdByMbtaId.get(String(stop.id)),
+          }))
+        })
+      })
+      .then((stops) => {
+        if (requestId !== this.latestStopsRequest) return // superseded by a newer selection
+
+        this.setState({
+          stops,
+          loadingStops: false,
+          originMbtaId: stops.length > 0 ? stops[0].mbtaId : '',
+          destinationMbtaId: stops.length > 0 ? stops[stops.length - 1].mbtaId : '',
+        })
+      })
+      .catch((error) => {
+        if (requestId !== this.latestStopsRequest) return
+        this.setState({ stops: [], loadingStops: false, originMbtaId: '', destinationMbtaId: '' })
+        console.error(`Error in fetch: ${error.message}`)
+      })
   }
 
-  lookupLocalStop(mbtaStopId, stateKey) {
-    fetch('/api/v1/stops')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      let match = body.find(stop => stop.mbta_id == mbtaStopId)
-      this.setState({ [stateKey]: match || "", loading: false })
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+  chooseLine(lineId) {
+    this.setState({ lineId })
+    this.loadStops(this.state.directionId, lineId)
   }
 
-  chooseLine(linePayload) {
-    let selectedLine = this.state.allLines.find(line => line.mbta_id == linePayload)
-    this.setState({ line_id: linePayload, line: selectedLine || {} })
-    this.fetchStopsLineDirectionId(this.state.direction_id, linePayload)
+  chooseDirection(directionId) {
+    this.setState({ directionId })
+    this.loadStops(directionId, this.state.lineId)
   }
 
-  chooseDirection(directionPayload) {
-    this.setState({ direction_id: directionPayload})
-    this.fetchStopsLineDirectionId(directionPayload, this.state.line_id)
+  // Origin and destination are already loaded, so picking one is just state.
+  chooseOrigin(originMbtaId) {
+    this.setState({ originMbtaId })
   }
 
-  chooseFormOrigin(originFormPayload) {
-    this.setState({ formOrigin: originFormPayload, loading: true})
-    this.lookupLocalStop(originFormPayload, 'origin')
-  }
-
-  chooseFormDestination(destinationFormPayload) {
-    this.setState({ formDestination: destinationFormPayload, loading: true})
-    if (destinationFormPayload.includes('place')) {
-      swal("Data for this stop is not available right now. Sorry! Please choose the next closest stop.")
+  chooseDestination(destinationMbtaId) {
+    if (String(destinationMbtaId).includes('place')) {
+      swal('Data for this stop is not available right now. Sorry! Please choose the next closest stop.')
     }
-    this.lookupLocalStop(destinationFormPayload, 'destination')
+    this.setState({ destinationMbtaId })
+  }
+
+  localStopId(mbtaId) {
+    const stop = this.state.stops.find((candidate) => candidate.mbtaId === mbtaId)
+    return stop && stop.localId
   }
 
   handleSubmit(event) {
-    event.preventDefault();
-    if (!this.state.line.id || !this.state.origin.id || !this.state.destination.id) {
-      swal("Hang on!", "Please choose a line, origin, and destination first.", "info");
-      return;
+    event.preventDefault()
+
+    const line = this.state.lines.find((candidate) => candidate.mbta_id === this.state.lineId)
+    const origin = this.localStopId(this.state.originMbtaId)
+    const destination = this.localStopId(this.state.destinationMbtaId)
+
+    if (!line || !origin || !destination) {
+      swal('Hang on!', 'Please choose a line, origin, and destination first.', 'info')
+      return
     }
-    let journey = {
-      line: this.state.line.id,
-      origin: this.state.origin.id,
-      destination: this.state.destination.id,
-      direction: parseInt(this.state.direction_id),
-      user: parseInt(this.state.user.id)
-    }
-    fetch('/api/v1/journeys', {
+
+    this.setState({ saving: true })
+
+    fetchJson('/api/v1/journeys', {
       method: 'POST',
-      body: JSON.stringify(journey),
-      headers: {
-        'Accept':  'application/json',
-        'Content-Type': 'application/json'},
-      credentials: 'same-origin'
+      body: JSON.stringify({
+        line: line.id,
+        origin,
+        destination,
+        direction: parseInt(this.state.directionId, 10),
+      }),
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
     })
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-            error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      this.props.journeyFetch();
-      swal("Your commute has been saved!");
-    })
-    .catch(error => {
-      console.error(`Error in fetch: ${error.message}`);
-      swal("Save error. Please try again.");
-    });
+      .then(() => {
+        this.setState({ saving: false })
+        this.props.journeyFetch()
+        swal('Your commute has been saved!')
+      })
+      .catch((error) => {
+        this.setState({ saving: false })
+        console.error(`Error in fetch: ${error.message}`)
+        swal('Save error. Please try again.')
+      })
   }
 
   render() {
-    let loading = this.state.loading
-    let button;
+    const { lines, lineId, directionId, stops, originMbtaId, destinationMbtaId, loadingStops, saving } = this.state
+    const stopOptions = stops.map((stop) => (
+      <option key={stop.mbtaId} value={stop.mbtaId}>{stop.name}</option>
+    ))
 
-    if (loading) {
-        button = <input id="input-text" className="btn mt-6 w-full disabled:opacity-50 sm:w-auto sm:px-8" value="Choose Your Commute!" type="submit" disabled/>
-    } else {
-      button = <input id="input-text" className="btn mt-6 w-full sm:w-auto sm:px-8" value="Choose Your Commute!" type="submit"/>
-    }
+    return (
+      <div>
+        <h1 className="mb-4 font-display text-2xl font-black sm:text-3xl">Please select your commute</h1>
+        <form className="flex flex-col gap-4" onSubmit={this.handleSubmit}>
+          <SelectField label="line" name="line" value={lineId} onChange={this.chooseLine}>
+            {lines.map((line) => (
+              <option key={line.id} value={line.mbta_id}>
+                {line.name} - {line.description} - {line.short_name}
+              </option>
+            ))}
+          </SelectField>
 
-      return(
-        <div>
-          <h1 className="mb-4 font-display text-2xl font-black sm:text-3xl">Please select your commute</h1>
-          <form className="flex flex-col gap-4" onSubmit={this.handleSubmit}>
-            <LineForm
-              lines={this.state.allLines}
-              value={this.state.line_id}
-              handlePayload={this.chooseLine}
-              />
-            <DirectionSelector
-              handlePayload={this.chooseDirection}
-              />
-            <OriginForm
-              label="origin"
-              handleFormChange={this.chooseFormOrigin}
-              stops={this.state.originStops}
-              value={this.state.formOrigin}
-              />
-            <DestinationForm
-              label="destination"
-              handleFormChange={this.chooseFormDestination}
-              stops={this.state.originStops}
-              value={this.state.formDestination}
-              />
-            {button}
-          </form>
-        </div>
-      )
-    }
+          <SelectField label="direction" name="directionMenu" value={directionId} onChange={this.chooseDirection}>
+            {DIRECTIONS.map((direction) => (
+              <option key={direction.id} value={direction.id}>{direction.label}</option>
+            ))}
+          </SelectField>
+
+          <SelectField
+            label="origin"
+            name="originStops"
+            value={originMbtaId}
+            onChange={this.chooseOrigin}
+            disabled={loadingStops}
+          >
+            {stopOptions}
+          </SelectField>
+
+          <SelectField
+            label="destination"
+            name="destinationStops"
+            value={destinationMbtaId}
+            onChange={this.chooseDestination}
+            disabled={loadingStops}
+          >
+            {stopOptions}
+          </SelectField>
+
+          <input
+            id="input-text"
+            className="btn mt-6 w-full disabled:opacity-50 sm:w-auto sm:px-8"
+            value="Choose Your Commute!"
+            type="submit"
+            disabled={loadingStops || saving}
+          />
+        </form>
+      </div>
+    )
   }
+}
 
 export default JourneySelectionForm;

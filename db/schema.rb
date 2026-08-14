@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2018_11_05_170524) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_14_030000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,6 +35,7 @@ ActiveRecord::Schema[7.1].define(version: 2018_11_05_170524) do
     t.string "mbta_id", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["mbta_id"], name: "index_lines_on_mbta_id"
   end
 
   create_table "notes", force: :cascade do |t|
@@ -67,6 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2018_11_05_170524) do
     t.string "platform_name"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["mbta_id"], name: "index_stops_on_mbta_id"
     t.index ["name"], name: "index_stops_on_name"
   end
 
@@ -76,6 +78,7 @@ ActiveRecord::Schema[7.1].define(version: 2018_11_05_170524) do
     t.string "departure", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["journey_id", "arrival", "departure"], name: "index_trips_on_journey_id_and_arrival_and_departure", unique: true
     t.index ["journey_id"], name: "index_trips_on_journey_id"
   end
 

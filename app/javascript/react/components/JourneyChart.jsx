@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Chart } from "react-google-charts";
+import fetchJson from '../utils/fetchJson'
 
 class JourneyChart extends Component {
   constructor(props){
@@ -12,17 +13,7 @@ class JourneyChart extends Component {
   }
 
   componentDidMount() {
-    fetch(`/api/v1/journeys/${this.props.id}/trips`)
-      .then(response => {
-        if (response.ok) {
-          return response;
-        } else {
-          let errorMessage = `${response.status} (${response.statusText})`,
-          error = new Error(errorMessage);
-          throw(error);
-        }
-      })
-      .then(response => response.json())
+    fetchJson(`/api/v1/journeys/${this.props.id}/trips`)
       .then(body => {
         let mappedData = body.trips.map(trip => {
           let arrival = parseInt(trip.arrival.slice(11).slice(0, -9))
@@ -30,37 +21,35 @@ class JourneyChart extends Component {
         })
         this.setState({ data: mappedData })
       })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
     }
 
       fetchScheduleData(){
         let endpoints = [`/api/v1/mbta/schedules?route=${this.props.line}&stop=${this.props.origin}`, `/api/v1/mbta/schedules?route=${this.props.line}&stop=${this.props.destination}`]
 
-        let promises = endpoints.map((endpoint) => {
-          return fetch(endpoint)
-        })
-
-        Promise.all(promises).then((responses) =>{
-          let parsedResponses = responses.map((response) => {
-            return response.json();
-          })
-          return Promise.all(parsedResponses)
-        })
+        Promise.all(endpoints.map(fetchJson))
         .then(responses => {
+          // Index the destination side by trip id so pairing is one pass over
+          // each list instead of comparing every arrival against every
+          // destination.
+          let destinationsByTripId = new Map(
+            responses[1].data.map(destination => [destination.relationships.trip.data.id, destination])
+          )
+
           let matches = []
           responses[0].data.forEach((arrival) => {
-            responses[1].data.forEach((destination) => {
-              if (arrival.relationships.trip.data.id == destination.relationships.trip.data.id) {
+            let destination = destinationsByTripId.get(arrival.relationships.trip.data.id)
+            if (!destination) return
 
-                let arrivalTime = arrival.attributes.arrival_time
-                let destinationTime = destination.attributes.arrival_time
-                let predictedTime = Math.floor(( new Date(destinationTime) - new Date(arrivalTime))/60000)
+            let arrivalTime = arrival.attributes.arrival_time
+            let destinationTime = destination.attributes.arrival_time
+            let predictedTime = Math.floor(( new Date(destinationTime) - new Date(arrivalTime))/60000)
 
-                matches.push([predictedTime, parseInt(arrival.attributes.arrival_time.slice(11).slice(0, -9))])
-              }
-            })
+            matches.push([predictedTime, parseInt(arrivalTime.slice(11).slice(0, -9))])
           })
           this.setState({ scheduleData: matches })
         })
+        .catch(error => console.error(`Error in fetch: ${error.message}`))
       }
 
     render(){

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import NoteForm from './NoteForm'
 import NoteTile from './NoteTile'
+import fetchJson from '../utils/fetchJson'
 
 class NoteContainer extends Component {
   constructor(props){
@@ -25,17 +26,7 @@ class NoteContainer extends Component {
   }
 
   componentDidMount(){
-    fetch(`/api/v1/journeys/${this.props.id}`)
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
+    fetchJson(`/api/v1/journeys/${this.props.id}`)
     .then(body => {
       this.setState({ user: body.journey.user, notes: body.journey.notes })
     })
@@ -49,23 +40,11 @@ class NoteContainer extends Component {
     body.append("journey", parseInt(this.props.id))
     body.append("user", this.state.user.id)
     body.append("photo_path", this.state.photoFile[0])
-    fetch(`/api/v1/journeys/${this.props.id}/notes`, {
+    fetchJson(`/api/v1/journeys/${this.props.id}/notes`, {
       method: 'POST',
       body: body,
-      headers: {
-        'Accept':  'application/json'},
-      credentials: 'same-origin'
+      headers: { 'Accept':  'application/json' }
     })
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-            error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
     .then(body => {
       let newNotes = this.state.notes.concat(body.note)
       this.setState({ notes: newNotes})

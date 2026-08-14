@@ -21,13 +21,12 @@ const journeysData = {
   ],
 }
 
-const linesData = [
-  { id: 1, name: 'Red Line', short_name: '', description: 'Rapid Transit', mbta_id: 'Red' },
+// The server filters non-bus routes when asked for bus_only, so the client
+// receives only bus lines.
+const busLinesData = [
   { id: 36, name: 'City Point - Copley via Boston Medical Center', short_name: '10', description: 'Local Bus', mbta_id: '10' },
-  { id: 5, name: 'Green Line C', short_name: 'C', description: 'Rapid Transit', mbta_id: 'Green-C' },
+  { id: 71, name: 'Reservoir - Forest Hills', short_name: '51', description: 'Local Bus', mbta_id: '51' },
 ]
-
-const userData = { id: 1, email: 'test@test.org', user_name: 'test1' }
 
 const mbtaStopsData = {
   data: [
@@ -52,9 +51,19 @@ function mockFetch(url, options = {}) {
     if (options.method === 'POST') return jsonResponse({ journey: {} })
     return jsonResponse(journeysData)
   }
-  if (url.startsWith('/api/v1/lines')) return jsonResponse(linesData)
-  if (url.startsWith('/api/v1/users')) return jsonResponse(userData)
+  if (url.startsWith('/api/v1/lines')) return jsonResponse(busLinesData)
   return Promise.reject(new Error(`Unhandled fetch in test: ${url}`))
+}
+
+const renderForm = () => render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+
+// Resolves once the route's stops have been loaded into both selects.
+async function waitForStops() {
+  await screen.findAllByRole('option', { name: 'Harrison Ave @ E Newton St' })
+  await waitFor(() => {
+    expect(global.fetch.mock.calls.some(([url]) => url.startsWith('/api/v1/stops?mbta_ids='))).toBe(true)
+  })
+  await new Promise((resolve) => setTimeout(resolve, 0))
 }
 
 describe('FormMasterComponent', () => {
@@ -67,14 +76,14 @@ describe('FormMasterComponent', () => {
   })
 
   it('renders the form and commute list headers', async () => {
-    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+    renderForm()
 
     expect(await screen.findByText('Please select your commute')).toBeInTheDocument()
     expect(screen.getByText('Your Commutes:')).toBeInTheDocument()
   })
 
   it('renders the journey selection form fields', async () => {
-    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+    renderForm()
 
     await screen.findByText('Please select your commute')
     expect(screen.getByText('Inbound')).toBeInTheDocument()
@@ -82,32 +91,47 @@ describe('FormMasterComponent', () => {
   })
 
   it('renders a journey tile for each saved journey', async () => {
-    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+    renderForm()
 
     expect(await screen.findByText('City Point - Copley via Boston Medical Center - 10')).toBeInTheDocument()
     expect(screen.getByText('To: Washington St @ Tollgate Way')).toBeInTheDocument()
   })
 
   it('populates the line and stop dropdowns on initial load', async () => {
-    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
+    renderForm()
 
     expect(await screen.findByRole('option', { name: 'City Point - Copley via Boston Medical Center - Local Bus - 10' })).toBeInTheDocument()
     // Stops for the first bus line load without any user interaction
     const originOptions = await screen.findAllByRole('option', { name: 'Harrison Ave @ E Newton St' })
     expect(originOptions).toHaveLength(2) // once in the origin select, once in destination
-    // Rapid Transit lines are filtered out of the line dropdown
-    expect(screen.queryByRole('option', { name: /Red Line/ })).not.toBeInTheDocument()
+    // Non-bus routes are excluded by the server rather than downloaded and filtered here
+    expect(global.fetch).toHaveBeenCalledWith('/api/v1/lines?bus_only=true', expect.anything())
+  })
+
+  it('resolves the route stops in a single request instead of the whole stops table', async () => {
+    renderForm()
+    await waitForStops()
+
+    const stopRequests = global.fetch.mock.calls.filter(([url]) => url.startsWith('/api/v1/stops'))
+    expect(stopRequests).toHaveLength(1)
+    // Scoped to just this route's stops, not every stop in the system
+    expect(stopRequests[0][0]).toBe('/api/v1/stops?mbta_ids=10015%2C25')
+  })
+
+  it('changes origin and destination without any network requests', async () => {
+    renderForm()
+    await waitForStops()
+
+    const callsBefore = global.fetch.mock.calls.length
+    fireEvent.change(screen.getByRole('combobox', { name: /origin/i }), { target: { value: '25' } })
+    fireEvent.change(screen.getByRole('combobox', { name: /destination/i }), { target: { value: '10015' } })
+
+    expect(global.fetch.mock.calls).toHaveLength(callsBefore)
   })
 
   it('submits the default selections when the form is untouched', async () => {
-    render(<MemoryRouter><FormMasterComponent /></MemoryRouter>)
-
-    await screen.findAllByRole('option', { name: 'Harrison Ave @ E Newton St' })
-    // Wait for the default stops to resolve against the local database
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/v1/stops')
-    })
-    await new Promise(resolve => setTimeout(resolve, 0))
+    renderForm()
+    await waitForStops()
 
     fireEvent.click(screen.getByDisplayValue('Choose Your Commute!'))
 
@@ -115,9 +139,12 @@ describe('FormMasterComponent', () => {
       const post = global.fetch.mock.calls.find(([url, opts]) => url === '/api/v1/journeys' && opts && opts.method === 'POST')
       expect(post).toBeTruthy()
       const body = JSON.parse(post[1].body)
+      // origin defaults to the first stop on the route, destination to the last
       expect(body.origin).toBe(1330)
-      expect(body.destination).toBe(1330)
+      expect(body.destination).toBe(7302)
       expect(body.line).toBe(36)
+      // The server derives the owner from the session
+      expect(body.user).toBeUndefined()
     })
   })
 })
