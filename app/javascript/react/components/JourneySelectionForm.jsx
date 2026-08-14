@@ -10,8 +10,9 @@ class JourneySelectionForm extends Component{
   constructor(props){
     super(props)
     this.state = {
-      line_id: "701",
-      line: [],
+      line_id: "",
+      line: {},
+      allLines: [],
       origin: "",
       formOrigin: "",
       destination: "",
@@ -45,6 +46,32 @@ class JourneySelectionForm extends Component{
         this.setState({ user: body })
       })
     .catch(error => console.error(`Error in fetch: ${error.message}`));
+
+    fetch('/api/v1/lines')
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+        error = new Error(errorMessage);
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(body => {
+      let busLines = body.filter(line => (
+        line.description !== "Rapid Transit" &&
+        line.description !== "Commuter Rail" &&
+        line.description !== "Limited Service" &&
+        line.description !== "Ferry"
+      ))
+      this.setState({ allLines: busLines })
+      if (busLines.length > 0) {
+        this.setState({ line_id: busLines[0].mbta_id, line: busLines[0] })
+        this.fetchStopsLineDirectionId(this.state.direction_id, busLines[0].mbta_id)
+      }
+    })
+    .catch(error => console.error(`Error in fetch: ${error.message}`));
   }
 
   fetchStopsLineDirectionId(direction_id, line_id) {
@@ -66,27 +93,9 @@ class JourneySelectionForm extends Component{
   }
 
   chooseLine(linePayload) {
-    this.setState({ line_id: linePayload})
-    fetch('/api/v1/lines')
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-        error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      body.forEach(line => {
-        if (line.mbta_id == linePayload) {
-          this.setState({ line: line })
-        }
-      })
-      this.fetchStopsLineDirectionId(this.state.direction_id, linePayload)
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`));
+    let selectedLine = this.state.allLines.find(line => line.mbta_id == linePayload)
+    this.setState({ line_id: linePayload, line: selectedLine || {} })
+    this.fetchStopsLineDirectionId(this.state.direction_id, linePayload)
   }
 
   chooseDirection(directionPayload) {
@@ -195,6 +204,8 @@ class JourneySelectionForm extends Component{
               <h1>Please select your commute</h1>
                 <form onSubmit={this.handleSubmit}>
                   <LineForm
+                    lines={this.state.allLines}
+                    value={this.state.line_id}
                     handlePayload={this.chooseLine}
                     />
                   <DirectionSelector
