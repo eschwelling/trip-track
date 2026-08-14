@@ -16,12 +16,15 @@ class JourneySelectionForm extends Component {
       lines: [],
       lineId: '',
       directionId: '0',
-      // Each entry is { mbtaId, name, localId } - the MBTA stop paired with the
-      // local Stop record it maps to, resolved once when the route loads.
+      // Local Stop records for the selected route: { id, name }. The server
+      // resolves MBTA ids to these, so every option here can be saved.
       stops: [],
-      originMbtaId: '',
-      destinationMbtaId: '',
-      loadingStops: false,
+      originStopId: '',
+      destinationStopId: '',
+      // Loading starts immediately on mount, so the form stays disabled rather
+      // than letting a fast click submit before there is anything to submit.
+      loadingStops: true,
+      stopsError: false,
       saving: false,
     }
 
@@ -44,45 +47,38 @@ class JourneySelectionForm extends Component {
         if (lines.length > 0) {
           this.setState({ lineId: lines[0].mbta_id })
           this.loadStops(this.state.directionId, lines[0].mbta_id)
+        } else {
+          this.setState({ loadingStops: false })
         }
       })
-      .catch((error) => console.error(`Error in fetch: ${error.message}`))
+      .catch((error) => {
+        this.setState({ loadingStops: false, stopsError: true })
+        console.error(`Error in fetch: ${error.message}`)
+      })
   }
 
   loadStops(directionId, lineId) {
     const requestId = (this.latestStopsRequest += 1)
-    this.setState({ loadingStops: true })
+    this.setState({ loadingStops: true, stopsError: false })
 
+    // A single request returns the route's stops already resolved to local
+    // records, so there is nothing left to look up per selection.
     fetchJson(`/api/v1/mbta/stops?direction_id=${directionId}&route=${lineId}`)
       .then((body) => {
-        const mbtaStops = body.data || []
-        if (mbtaStops.length === 0) return []
-
-        // One request resolves every stop on the route. This replaced a
-        // download of the entire stops table per dropdown interaction.
-        const ids = mbtaStops.map((stop) => stop.id)
-        return fetchJson(`/api/v1/stops?mbta_ids=${encodeURIComponent(ids.join(','))}`).then((localStops) => {
-          const localIdByMbtaId = new Map(localStops.map((stop) => [String(stop.mbta_id), stop.id]))
-          return mbtaStops.map((stop) => ({
-            mbtaId: stop.id,
-            name: stop.attributes.name,
-            localId: localIdByMbtaId.get(String(stop.id)),
-          }))
-        })
-      })
-      .then((stops) => {
         if (requestId !== this.latestStopsRequest) return // superseded by a newer selection
 
+        const stops = body.stops || []
         this.setState({
           stops,
           loadingStops: false,
-          originMbtaId: stops.length > 0 ? stops[0].mbtaId : '',
-          destinationMbtaId: stops.length > 0 ? stops[stops.length - 1].mbtaId : '',
+          stopsError: false,
+          originStopId: stops.length > 0 ? String(stops[0].id) : '',
+          destinationStopId: stops.length > 0 ? String(stops[stops.length - 1].id) : '',
         })
       })
       .catch((error) => {
         if (requestId !== this.latestStopsRequest) return
-        this.setState({ stops: [], loadingStops: false, originMbtaId: '', destinationMbtaId: '' })
+        this.setState({ stops: [], loadingStops: false, stopsError: true, originStopId: '', destinationStopId: '' })
         console.error(`Error in fetch: ${error.message}`)
       })
   }
@@ -98,31 +94,27 @@ class JourneySelectionForm extends Component {
   }
 
   // Origin and destination are already loaded, so picking one is just state.
-  chooseOrigin(originMbtaId) {
-    this.setState({ originMbtaId })
+  chooseOrigin(originStopId) {
+    this.setState({ originStopId })
   }
 
-  chooseDestination(destinationMbtaId) {
-    if (String(destinationMbtaId).includes('place')) {
-      swal('Data for this stop is not available right now. Sorry! Please choose the next closest stop.')
-    }
-    this.setState({ destinationMbtaId })
-  }
-
-  localStopId(mbtaId) {
-    const stop = this.state.stops.find((candidate) => candidate.mbtaId === mbtaId)
-    return stop && stop.localId
+  chooseDestination(destinationStopId) {
+    this.setState({ destinationStopId })
   }
 
   handleSubmit(event) {
     event.preventDefault()
 
     const line = this.state.lines.find((candidate) => candidate.mbta_id === this.state.lineId)
-    const origin = this.localStopId(this.state.originMbtaId)
-    const destination = this.localStopId(this.state.destinationMbtaId)
+    const origin = parseInt(this.state.originStopId, 10)
+    const destination = parseInt(this.state.destinationStopId, 10)
 
     if (!line || !origin || !destination) {
-      swal('Hang on!', 'Please choose a line, origin, and destination first.', 'info')
+      swal(
+        "We're not ready yet",
+        'This route\'s stops are still loading (or could not be loaded). Give it a moment and try again.',
+        'info'
+      )
       return
     }
 
@@ -151,9 +143,9 @@ class JourneySelectionForm extends Component {
   }
 
   render() {
-    const { lines, lineId, directionId, stops, originMbtaId, destinationMbtaId, loadingStops, saving } = this.state
+    const { lines, lineId, directionId, stops, originStopId, destinationStopId, loadingStops, stopsError, saving } = this.state
     const stopOptions = stops.map((stop) => (
-      <option key={stop.mbtaId} value={stop.mbtaId}>{stop.name}</option>
+      <option key={stop.id} value={stop.id}>{stop.name}</option>
     ))
 
     return (
@@ -177,7 +169,7 @@ class JourneySelectionForm extends Component {
           <SelectField
             label="origin"
             name="originStops"
-            value={originMbtaId}
+            value={originStopId}
             onChange={this.chooseOrigin}
             disabled={loadingStops}
           >
@@ -187,19 +179,25 @@ class JourneySelectionForm extends Component {
           <SelectField
             label="destination"
             name="destinationStops"
-            value={destinationMbtaId}
+            value={destinationStopId}
             onChange={this.chooseDestination}
             disabled={loadingStops}
           >
             {stopOptions}
           </SelectField>
 
+          {stopsError &&
+            <p role="alert" className="text-sm text-red-700">
+              Couldn&apos;t load stops for this route. Please try again in a moment.
+            </p>
+          }
+
           <input
             id="input-text"
             className="btn mt-6 w-full disabled:opacity-50 sm:w-auto sm:px-8"
             value="Choose Your Commute!"
             type="submit"
-            disabled={loadingStops || saving}
+            disabled={loadingStops || saving || stops.length === 0}
           />
         </form>
       </div>

@@ -28,25 +28,23 @@ const busLinesData = [
   { id: 71, name: 'Reservoir - Forest Hills', short_name: '51', description: 'Local Bus', mbta_id: '51' },
 ]
 
-const mbtaStopsData = {
-  data: [
-    { id: '10015', attributes: { name: 'Harrison Ave @ E Newton St' } },
-    { id: '25', attributes: { name: 'E Broadway @ L St' } },
+// The server resolves MBTA ids to local Stop records before replying, so the
+// client never has to match them up itself.
+const routeStopsData = {
+  stops: [
+    { id: 1330, mbta_id: 10015, name: 'Harrison Ave @ E Newton St' },
+    { id: 7302, mbta_id: 25, name: 'E Broadway @ L St' },
   ],
 }
-
-const localStopsData = [
-  { id: 1330, mbta_id: 10015, name: 'Harrison Ave @ E Newton St' },
-  { id: 7302, mbta_id: 25, name: 'E Broadway @ L St' },
-]
 
 function jsonResponse(body) {
   return Promise.resolve({ ok: true, json: () => Promise.resolve(body) })
 }
 
 function mockFetch(url, options = {}) {
-  if (url.startsWith('/api/v1/mbta/stops')) return jsonResponse(mbtaStopsData)
-  if (url.startsWith('/api/v1/stops')) return jsonResponse(localStopsData)
+  if (url.startsWith('/api/v1/mbta/stops')) return jsonResponse(routeStopsData)
+  // Reaching for the whole stops table is the performance bug this replaced.
+  if (url.startsWith('/api/v1/stops')) return Promise.reject(new Error('should not fetch the stops table'))
   if (url.startsWith('/api/v1/journeys')) {
     if (options.method === 'POST') return jsonResponse({ journey: {} })
     return jsonResponse(journeysData)
@@ -61,7 +59,7 @@ const renderForm = () => render(<MemoryRouter><FormMasterComponent /></MemoryRou
 async function waitForStops() {
   await screen.findAllByRole('option', { name: 'Harrison Ave @ E Newton St' })
   await waitFor(() => {
-    expect(global.fetch.mock.calls.some(([url]) => url.startsWith('/api/v1/stops?mbta_ids='))).toBe(true)
+    expect(global.fetch.mock.calls.some(([url]) => url.startsWith('/api/v1/mbta/stops'))).toBe(true)
   })
   await new Promise((resolve) => setTimeout(resolve, 0))
 }
@@ -108,14 +106,12 @@ describe('FormMasterComponent', () => {
     expect(global.fetch).toHaveBeenCalledWith('/api/v1/lines?bus_only=true', expect.anything())
   })
 
-  it('resolves the route stops in a single request instead of the whole stops table', async () => {
+  it('resolves the route stops in a single request and never downloads the stops table', async () => {
     renderForm()
     await waitForStops()
 
-    const stopRequests = global.fetch.mock.calls.filter(([url]) => url.startsWith('/api/v1/stops'))
-    expect(stopRequests).toHaveLength(1)
-    // Scoped to just this route's stops, not every stop in the system
-    expect(stopRequests[0][0]).toBe('/api/v1/stops?mbta_ids=10015%2C25')
+    expect(global.fetch.mock.calls.filter(([url]) => url.startsWith('/api/v1/mbta/stops'))).toHaveLength(1)
+    expect(global.fetch.mock.calls.filter(([url]) => url.startsWith('/api/v1/stops'))).toHaveLength(0)
   })
 
   it('changes origin and destination without any network requests', async () => {
@@ -123,8 +119,8 @@ describe('FormMasterComponent', () => {
     await waitForStops()
 
     const callsBefore = global.fetch.mock.calls.length
-    fireEvent.change(screen.getByRole('combobox', { name: /origin/i }), { target: { value: '25' } })
-    fireEvent.change(screen.getByRole('combobox', { name: /destination/i }), { target: { value: '10015' } })
+    fireEvent.change(screen.getByRole('combobox', { name: /origin/i }), { target: { value: '7302' } })
+    fireEvent.change(screen.getByRole('combobox', { name: /destination/i }), { target: { value: '1330' } })
 
     expect(global.fetch.mock.calls).toHaveLength(callsBefore)
   })
