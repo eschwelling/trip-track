@@ -35,10 +35,9 @@ class JourneyChart extends Component {
     }
 
       fetchScheduleData(){
-        let endpoints = [`https://api-v3.mbta.com/schedules?filter%5Broute%5D=${this.props.line}&filter%5Bstop%5D=${this.props.origin}`, `https://api-v3.mbta.com/schedules?filter%5Broute%5D=${this.props.line}&filter%5Bstop%5D=${this.props.destination}`]
+        let endpoints = [`/api/v1/mbta/schedules?route=${this.props.line}&stop=${this.props.origin}`, `/api/v1/mbta/schedules?route=${this.props.line}&stop=${this.props.destination}`]
 
         let promises = endpoints.map((endpoint) => {
-          debugger;
           return fetch(endpoint)
         })
 
@@ -73,17 +72,7 @@ class JourneyChart extends Component {
             <div className="small-6 columns">
               <Chart
               chartType="ScatterChart"
-              rows={this.state.data}
-              columns={[
-                {
-                  type: "number",
-                  label: "Time"
-                },
-                {
-                  type: "number",
-                  label: "Duration"
-                }
-              ]}
+              data={[["Time", "Duration"], ...this.state.data]}
               options={
                 {
                   title: "Your Trips",
@@ -97,23 +86,12 @@ class JourneyChart extends Component {
               }
               width={"100%"}
               height={"400px"}
-              legendToggle
               />
             </div>
             <div className="small-6 columns">
               <Chart
                 chartType="ScatterChart"
-                rows={this.state.scheduleData}
-                columns={[
-                  {
-                    type: "number",
-                    label: "Scheduled Time",
-                  },
-                  {
-                    type: "number",
-                    label: "Scheduled Duration"
-                  }
-                ]}
+                data={[["Scheduled Time", "Scheduled Duration"], ...this.state.scheduleData]}
                 options={
                   {
                     title: "Scheduled Trips",
@@ -127,7 +105,6 @@ class JourneyChart extends Component {
                 }
                 width={"100%"}
                 height={"400px"}
-                legendToggle
               />
             </div>
           </div>

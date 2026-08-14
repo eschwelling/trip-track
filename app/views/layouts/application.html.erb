@@ -9,9 +9,10 @@
   <link href="https://fonts.googleapis.com/css?family=Rubik:900" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans" rel="stylesheet">
 
-    <%= javascript_include_tag "vendor/modernizr" %>
+  <%= javascript_include_tag "vendor/modernizr" %>
 
   <%= csrf_meta_tags %>
+  <%= vite_client_tag %>
 </head>
 <body>
 
@@ -33,15 +34,7 @@
 
   <%= javascript_include_tag 'application' %>
 
-  <%- if Rails.env.development? || Rails.env.test? -%>
-    <%= javascript_tag do %>
-      window.railsEnv = '<%= Rails.env %>'
-    <%- end -%>
-  <%- end -%>
-  <%= javascript_tag do %>
-    window.MBTAkey = "<%== ENV["MBTA_KEY"] %>"
-  <% end %>
-  <%= javascript_pack_tag 'application' %>
+  <%= vite_javascript_tag 'application' %>
 
   <%= yield :extra_footer %>
 </body>

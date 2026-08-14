@@ -18,6 +18,9 @@ Rails.application.routes.draw do
         resources :lines, only: [:index]
         resources :stops, only: [:index]
         get '/stops/search', to: 'stops#search'
+        get '/mbta/stops', to: 'mbta#stops'
+        get '/mbta/predictions', to: 'mbta#predictions'
+        get '/mbta/schedules', to: 'mbta#schedules'
         resources :journeys, only: [:index, :create, :show, :destroy] do
           resources :notes, only: [:index, :create]
           resources :trips, only: [:index, :create, :show]

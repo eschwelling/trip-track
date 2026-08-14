@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import swal from 'sweetalert'
 import DestinationArrivalTime from './DestinationArrivalTime'
 
 class DestinationPrediction extends Component {
@@ -11,7 +12,7 @@ class DestinationPrediction extends Component {
   }
 
   getDestinationPredictions(){
-    fetch(`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.destinationMbtaId}`)
+    fetch(`/api/v1/mbta/predictions?stop=${this.props.destinationMbtaId}`)
     .then(response => {
       if (response.ok) {
         return response;

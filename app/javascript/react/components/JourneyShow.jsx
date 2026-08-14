@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { useParams } from 'react-router-dom'
 import OriginPrediction from './OriginPrediction'
 import DestinationPrediction from './DestinationPrediction'
 import DurationPrediction from './DurationPrediction'
@@ -20,20 +21,10 @@ class JourneyShow extends Component {
       destinationArrivalPredictions: {},
       presenceOfId: false
     }
-    this.idPresenceSwitch = this.idPresenceSwitch.bind(this)
   }
-
-  idPresenceSwitch(){
-    if (Object.keys(this.state.destination).length == 0 && Object.keys(this.state.origin).length == 0 && Object.keys(this.state.direction).length == 0) {
-      this.setState({ presenceOfId: this.state.presenceOfId})
-    } else {
-      this.setState({ presenceOfId: !this.state.presenceOfId})
-    }
-  }
-
 
   componentDidMount() {
-    fetch(`/api/v1/journeys/${this.props.params.id}`)
+    fetch(`/api/v1/journeys/${this.props.id}`)
       .then(response => {
         if (response.ok) {
           return response;
@@ -45,8 +36,10 @@ class JourneyShow extends Component {
       })
       .then(response => response.json())
       .then(body => {
-        this.setState({ origin: body.journey.origin, destination: body.journey.destination, line: body.journey.line, direction: body.journey.direction_id })
-        this.idPresenceSwitch();
+        let origin = body.journey.origin
+        let destination = body.journey.destination
+        let presenceOfId = Object.keys(origin).length > 0 || Object.keys(destination).length > 0
+        this.setState({ origin, destination, line: body.journey.line, direction: body.journey.direction_id, presenceOfId })
       })
     }
 
@@ -65,7 +58,7 @@ class JourneyShow extends Component {
                   {
                     this.state.presenceOfId &&
                     <DurationPrediction
-                      id={this.props.params.id}
+                      id={this.props.id}
                       originHandlePayload = {this.getOriginArrivalTimes}
                       destinationHandlePayload = {this.getDestinationArrivalTimes}
                       arrivalMbtaId = {this.state.origin.mbta_id}
@@ -82,7 +75,7 @@ class JourneyShow extends Component {
           <div>
             <div className="row">
               <JourneyChart
-                id={this.props.params.id}
+                id={this.props.id}
                 direction={this.state.direction}
                 line={this.state.line.mbta_id}
                 destination={this.state.destination.mbta_id}
@@ -93,7 +86,7 @@ class JourneyShow extends Component {
             <div className="row">
               <div className="small-10 medium-12 large-12 columns notes">
                 <NoteContainer
-                  id={this.props.params.id}
+                  id={this.props.id}
                   />
               </div>
             </div>
@@ -102,4 +95,9 @@ class JourneyShow extends Component {
     }
   }
 
-export default JourneyShow;
+const JourneyShowWithParams = (props) => {
+  const { id } = useParams()
+  return <JourneyShow {...props} id={id} />
+}
+
+export default JourneyShowWithParams;

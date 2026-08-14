@@ -2,9 +2,10 @@ require 'httparty'
 require 'rubygems'
 
 base_uri = 'https://api-v3.mbta.com'
+api_key = { api_key: ENV["MBTA_KEY"] }
 
-all_lines_external = HTTParty.get("#{base_uri}/routes")
-all_stops_external = HTTParty.get("#{base_uri}/stops")
+all_lines_external = HTTParty.get("#{base_uri}/routes", query: api_key)
+all_stops_external = HTTParty.get("#{base_uri}/stops", query: api_key)
 
 
 all_lines_external["data"].each do |line|

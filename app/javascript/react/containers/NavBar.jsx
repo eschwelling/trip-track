@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link, browserHistory } from 'react-router';
-import BackButton from './BackButton'
+import { Link, Outlet } from 'react-router-dom';
 
 
 class NavBar extends Component {
@@ -37,11 +36,6 @@ class NavBar extends Component {
  }
 
  render() {
-  const children = React.Children.map(this.props.children, child => {
-    return React.cloneElement(child, {
-      currentUser: this.state.currentUser
-    });
-  });
   return(
     <div className="">
           <div className="react-nav-bar">
@@ -53,7 +47,7 @@ class NavBar extends Component {
               <h1 id="headline" className="main-header">TripTrack</h1>
             </div>
         </div>
-        {this.props.children}
+        <Outlet />
     </div>
   )
   }

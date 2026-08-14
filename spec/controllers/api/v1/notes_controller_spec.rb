@@ -26,7 +26,7 @@ RSpec.describe Api::V1::NotesController, type: :controller do
       returned_json = JSON.parse(response.body)
 
       expect(response.status).to eq 200
-      expect(response.content_type). to eq ("application/json")
+      expect(response.media_type). to eq ("application/json")
 
       expect(returned_json["notes"].length).to eq 3
 

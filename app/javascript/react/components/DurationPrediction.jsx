@@ -14,7 +14,7 @@ class DurationPrediction extends Component {
 
 
   fetchArrivalsAndDestinations(){
-    let endpoints = [`https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.arrivalMbtaId}`, `https://api-v3.mbta.com/predictions?filter%5Bstop%5D=${this.props.destinationMbtaId}`]
+    let endpoints = [`/api/v1/mbta/predictions?stop=${this.props.arrivalMbtaId}`, `/api/v1/mbta/predictions?stop=${this.props.destinationMbtaId}`]
 
     let promises = endpoints.map((endpoint) => {
       return fetch(endpoint)

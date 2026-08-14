@@ -28,7 +28,7 @@ RSpec.describe Api::V1::JourneysController, type: :controller do
       returned_json = JSON.parse(response.body)
 
       expect(response.status).to eq 200
-      expect(response.content_type). to eq ("application/json")
+      expect(response.media_type). to eq ("application/json")
 
       expect(returned_json["journeys"].length).to eq 2
 
@@ -44,7 +44,7 @@ RSpec.describe Api::V1::JourneysController, type: :controller do
         returned_json = JSON.parse(response.body)
 
         expect(response.status).to eq 200
-        expect(response.content_type). to eq ("application/json")
+        expect(response.media_type). to eq ("application/json")
 
         expect(returned_json.length).to eq 1
 

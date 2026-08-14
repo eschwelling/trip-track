@@ -48,10 +48,7 @@ class JourneySelectionForm extends Component{
   }
 
   fetchStopsLineDirectionId(direction_id, line_id) {
-    fetch(`https://api-v3.mbta.com/stops?api_key=${window.MBTAkey}&filter%5Bdirection_id%5D=${this.state.direction_id}&filter%5Broute%5D=${this.state.line_id}`, {
-      headers: {
-        'Accept-Encoding': 'gzip'
-      }})
+    fetch(`/api/v1/mbta/stops?direction_id=${this.state.direction_id}&route=${this.state.line_id}`)
     .then(response => {
       if (response.ok) {
         return response;
