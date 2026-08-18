@@ -3,11 +3,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.3.6'
 
-gem 'rails', '~> 7.1.3'
+gem 'rails', '~> 7.2.3', '>= 7.2.3.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.5'
 # Use Puma as the app server
-gem 'puma', '~> 6.4'
+gem 'puma', '>= 8.0.2'
 # Asset pipeline (serves app/assets images; all CSS/JS goes through Vite)
 gem 'sprockets-rails'
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -53,7 +53,7 @@ gem 'factory_bot', group: [:development, :test]
 gem 'database_cleaner-active_record', group: [:development, :test]
 gem 'valid_attribute', group: [:development, :test]
 gem 'shoulda-matchers', '~> 6.0', group: [:development, :test], require: false
-gem 'devise', '~> 4.9'
+gem 'devise', '>= 5.0.4'
 gem 'httparty'
 gem 'carrierwave', '~> 3.0'
 # Backs CarrierWave's S3 storage. Replaces the unmaintained multi-provider
