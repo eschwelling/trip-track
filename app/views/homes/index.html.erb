@@ -1,18 +1,17 @@
-<div class="splash-background">
-  <div class="row">
-      <div class="text-center splash-page">
-        <h1>TripTrack</h1>
-      </div>
-    </div>
+<div class="flex min-h-screen flex-col bg-mbta">
+  <main class="flex flex-1 flex-col items-center justify-center gap-10 px-4 py-16">
+    <h1 class="border-8 border-white bg-tile px-4 py-2 text-center font-display text-6xl font-black text-white sm:text-8xl lg:text-9xl">
+      TripTrack
+    </h1>
 
-    <div class="row buttons text-center">
-      <li class="secondary button"><%= link_to 'Sign Up', new_user_registration_path %></li>
-      <li class="secondary button"><%= link_to 'Sign In', new_user_session_path %></li>
+    <div class="flex w-full max-w-xs flex-col items-center gap-4 sm:max-w-none sm:flex-row sm:justify-center sm:gap-8">
+      <%= link_to 'Sign Up', new_user_registration_path, class: "btn w-full bg-white !text-mbta hover:bg-gray-100 sm:w-40" %>
+      <%= link_to 'Sign In', new_user_session_path, class: "btn w-full bg-white !text-mbta hover:bg-gray-100 sm:w-40" %>
     </div>
+  </main>
 
-    <div class="footer">
-      <img class="mbta-img" src="/MassDOT_Logos.jpg"/>
-      <h3>powered by</h3>
-    </div>
-
+  <footer class="flex items-center justify-end gap-3 bg-white px-4 py-3">
+    <h3 class="font-sans text-black">powered by</h3>
+    <img class="h-auto w-40 sm:w-56" src="/MassDOT_Logos.jpg" alt="MassDOT and MBTA logos" />
+  </footer>
 </div>

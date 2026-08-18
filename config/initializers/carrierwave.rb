@@ -1,5 +1,7 @@
 CarrierWave.configure do |config|
-  if !Rails.env.test?
+  # S3 storage is optional: uploaders fall back to :file storage when the
+  # AWS credentials are absent (see NotePhotoUploader).
+  if ENV["AWS_ACCESS_KEY_ID"].present?
     config.fog_credentials = {
       provider: "AWS",
       aws_access_key_id: ENV["AWS_ACCESS_KEY_ID"],

@@ -4,10 +4,13 @@ class NotePhotoUploader < CarrierWave::Uploader::Base
    # include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
-  if Rails.env.test?
-    storage :file
-  else
+  # S3 (via fog) when AWS credentials are configured; local disk otherwise.
+  # Note that local storage is ephemeral on hosts like Render - uploaded
+  # photos disappear on redeploy unless S3 is configured.
+  if !Rails.env.test? && ENV["AWS_ACCESS_KEY_ID"].present?
     storage :fog
+  else
+    storage :file
   end
 
   # Override the directory where uploaded files will be stored.

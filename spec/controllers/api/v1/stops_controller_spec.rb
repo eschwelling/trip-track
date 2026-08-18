@@ -15,7 +15,7 @@ RSpec.describe Api::V1::StopsController, type: :controller do
       returned_json = JSON.parse(response.body)
 
       expect(response.status).to eq 200
-      expect(response.content_type). to eq ("application/json")
+      expect(response.media_type). to eq ("application/json")
 
       expect(returned_json.length).to eq 3
 
@@ -32,7 +32,7 @@ RSpec.describe Api::V1::StopsController, type: :controller do
       returned_json = JSON.parse(response.body)
 
       expect(response.status).to eq 200
-      expect(response.content_type). to eq ("application/json")
+      expect(response.media_type). to eq ("application/json")
       expect(returned_json.length).to eq 1
 
       expect(returned_json[0]["mbta_id"]).to eq stop1.mbta_id
